@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WSOP Control Panel Mockup</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #1a1a2e;
+      color: white;
+      padding: 40px;
+    }
+    .section-title {
+      font-size: 24px;
+      color: #ffd700;
+      margin: 40px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #ffd700;
+    }
+    .mockup-label {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    /* Control Panel */
+    .control-panel {
+      background: #0d0d1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      width: 1000px;
+      overflow: hidden;
+    }
+    .control-header {
+      background: linear-gradient(90deg, #ffd700 0%, #ff9f43 100%);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .control-header .title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #000;
+    }
+    .control-header .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #000;
+      font-weight: bold;
+    }
+    .control-header .live-dot {
+      width: 12px;
+      height: 12px;
+      background: #00ff00;
+      border-radius: 50%;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .control-body {
+      padding: 20px;
+    }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #888;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .tab-btn.active {
+      background: rgba(255,215,0,0.2);
+      border-color: #ffd700;
+      color: #ffd700;
+    }
+    .tab-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .quick-actions .label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    .action-btn {
+      padding: 15px 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #444;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover {
+      background: rgba(255,215,0,0.1);
+      border-color: #ffd700;
+    }
+    .action-btn .key {
+      display: inline-block;
+      background: #333;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      margin-bottom: 5px;
+      color: #ffd700;
+    }
+    .action-btn .name {
+      font-size: 12px;
+      color: #ccc;
+    }
+
+    /* Player Search */
+    .player-search {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 12px 15px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+    }
+    .search-input::placeholder {
+      color: #666;
+    }
+    .search-btn {
+      padding: 12px 25px;
+      background: #ffd700;
+      border: none;
+      border-radius: 8px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .search-btn:hover {
+      background: #ffed4a;
+    }
+
+    /* Soft Contents Queue */
+    .queue-section {
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .queue-section .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .queue-section .title {
+      font-size: 14px;
+      color: #ffd700;
+      text-transform: uppercase;
+    }
+    .queue-section .count {
+      font-size: 12px;
+      color: #888;
+    }
+    .queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .queue-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      border-left: 3px solid #4ecdc4;
+    }
+    .queue-item .order {
+      width: 25px;
+      font-size: 12px;
+      color: #666;
+    }
+    .queue-item .type {
+      padding: 3px 8px;
+      background: rgba(78,205,196,0.2);
+      border-radius: 4px;
+      font-size: 11px;
+      color: #4ecdc4;
+      margin-right: 15px;
+    }
+    .queue-item .content {
+      flex: 1;
+      font-size: 14px;
+    }
+    .queue-item .actions {
+      display: flex;
+      gap: 8px;
+    }
+    .queue-item .play-btn {
+      padding: 5px 15px;
+      background: #4ecdc4;
+      border: none;
+      border-radius: 4px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .queue-item .remove-btn {
+      padding: 5px 10px;
+      background: rgba(255,107,107,0.2);
+      border: 1px solid #ff6b6b;
+      border-radius: 4px;
+      color: #ff6b6b;
+      cursor: pointer;
+    }
+
+    /* Current Display */
+    .current-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: rgba(78,205,196,0.1);
+      border: 1px solid #4ecdc4;
+      border-radius: 8px;
+    }
+    .current-display .label {
+      font-size: 12px;
+      color: #888;
+    }
+    .current-display .value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    .current-display .hide-btn {
+      padding: 10px 20px;
+      background: rgba(255,107,107,0.2);
+      border: 1px solid #ff6b6b;
+      border-radius: 8px;
+      color: #ff6b6b;
+      cursor: pointer;
+    }
+
+    /* Second section - L-Bar Control */
+    .lbar-control {
+      margin-top: 40px;
+      background: #0d0d1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 20px;
+      width: 600px;
+    }
+    .lbar-control .title {
+      font-size: 16px;
+      color: #ffd700;
+      margin-bottom: 15px;
+    }
+    .lbar-states {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .state-btn {
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border: 2px solid #333;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .state-btn.active {
+      border-color: #ffd700;
+      background: rgba(255,215,0,0.1);
+    }
+    .state-btn .icon {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    .state-btn .name {
+      font-size: 12px;
+      color: #ccc;
+    }
+    .state-btn.active .name {
+      color: #ffd700;
+    }
+
+    /* L-Bar Preview */
+    .lbar-preview {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+    }
+    .lbar-preview .label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+    .lbar-mockup {
+      background: linear-gradient(90deg, #ffd700 0%, #ff9f43 100%);
+      border-radius: 8px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #000;
+    }
+    .lbar-mockup .event-name {
+      font-weight: bold;
+    }
+    .lbar-mockup .info {
+      display: flex;
+      gap: 30px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: #ffd700; margin-bottom: 10px;">WSOP Broadcast Graphics - Control Panel</h1>
+  <p style="color: #888; margin-bottom: 40px;">PRD-0001 Wireframe Mockups</p>
+
+  <!-- Main Control Panel -->
+  <h2 class="section-title">1. Graphics Control Panel</h2>
+  <div class="mockup-label">PD/Operator Interface</div>
+  <div class="control-panel">
+    <div class="control-header">
+      <span class="title">WSOP Graphics Control</span>
+      <div class="status">
+        <span>Day 3 ITM</span>
+        <div class="live-dot"></div>
+        <span>LIVE</span>
+      </div>
+    </div>
+    <div class="control-body">
+      <!-- Tab Navigation -->
+      <div class="tab-nav">
+        <div class="tab-btn active">Leaderboard</div>
+        <div class="tab-btn">Statistics</div>
+        <div class="tab-btn">Player</div>
+        <div class="tab-btn">Event</div>
+        <div class="tab-btn">Transition</div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <div class="label">Quick Actions</div>
+        <div class="action-grid">
+          <div class="action-btn">
+            <div class="key">F1</div>
+            <div class="name">Tournament LB</div>
+          </div>
+          <div class="action-btn">
+            <div class="key">F2</div>
+            <div class="name">Feature LB</div>
+          </div>
+          <div class="action-btn">
+            <div class="key">F3</div>
+            <div class="name">Mini Chips</div>
+          </div>
+          <div class="action-btn">
+            <div class="key">F4</div>
+            <div class="name">Chip Flow</div>
+          </div>
+          <div class="action-btn">
+            <div class="key">F5</div>
+            <div class="name">At Risk</div>
+          </div>
+          <div class="action-btn">
+            <div class="key">F6</div>
+            <div class="name">Transition</div>
+          </div>
+          <div class="action-btn">
+            <div class="key">F7</div>
+            <div class="name">Blind Level</div>
+          </div>
+          <div class="action-btn">
+            <div class="key">F8</div>
+            <div class="name">Soft Content</div>
+          </div>
+          <div class="action-btn">
+            <div class="key">F9</div>
+            <div class="name">Clear All</div>
+          </div>
+          <div class="action-btn">
+            <div class="key">ESC</div>
+            <div class="name">Hide Current</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player Search -->
+      <div class="player-search">
+        <input type="text" class="search-input" placeholder="Player name or table number...">
+        <button class="search-btn">Search</button>
+        <button class="search-btn" style="background: #4ecdc4;">Show Profile</button>
+      </div>
+
+      <!-- Soft Contents Queue -->
+      <div class="queue-section">
+        <div class="header">
+          <span class="title">Soft Contents Queue</span>
+          <span class="count">3 items</span>
+        </div>
+        <div class="queue-list">
+          <div class="queue-item">
+            <span class="order">1</span>
+            <span class="type">UPDATE</span>
+            <span class="content">Player Update: John Doe (Table 5) - 2.5M chips</span>
+            <div class="actions">
+              <button class="play-btn">PLAY</button>
+              <button class="remove-btn">X</button>
+            </div>
+          </div>
+          <div class="queue-item">
+            <span class="order">2</span>
+            <span class="type">HAND</span>
+            <span class="content">Hand Highlight: AA vs KK (Table 3) - $450K pot</span>
+            <div class="actions">
+              <button class="play-btn">PLAY</button>
+              <button class="remove-btn">X</button>
+            </div>
+          </div>
+          <div class="queue-item">
+            <span class="order">3</span>
+            <span class="type">INTERVIEW</span>
+            <span class="content">Interview: Sarah Chen - Qualifier Story</span>
+            <div class="actions">
+              <button class="play-btn">PLAY</button>
+              <button class="remove-btn">X</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Display -->
+      <div class="current-display">
+        <div>
+          <div class="label">Currently Displaying</div>
+          <div class="value">Feature Table Leaderboard (2 Tables)</div>
+        </div>
+        <button class="hide-btn">Hide (ESC)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- L-Bar Control -->
+  <h2 class="section-title">2. L-Bar State Control</h2>
+  <div class="mockup-label">Tournament Phase Selection</div>
+  <div class="lbar-control">
+    <div class="title">L-Bar State</div>
+    <div class="lbar-states">
+      <div class="state-btn">
+        <div class="icon">REG</div>
+        <div class="name">Regi Open</div>
+      </div>
+      <div class="state-btn active">
+        <div class="icon">CLOSE</div>
+        <div class="name">Regi Close</div>
+      </div>
+      <div class="state-btn">
+        <div class="icon">BUB</div>
+        <div class="name">Bubble</div>
+      </div>
+      <div class="state-btn">
+        <div class="icon">FEW</div>
+        <div class="name">Few Tables</div>
+      </div>
+    </div>
+    <div class="lbar-preview">
+      <div class="label">Preview</div>
+      <div class="lbar-mockup">
+        <span class="event-name">WSOP Super Circuit Main Event</span>
+        <div class="info">
+          <span>Level 15</span>
+          <span>10K/20K (20K)</span>
+          <span>47 Remaining</span>
+          <span>Break: 45min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

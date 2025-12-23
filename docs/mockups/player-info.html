@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WSOP Player Info Mockups</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #1a1a2e;
+      color: white;
+      padding: 40px;
+    }
+    .section-title {
+      font-size: 24px;
+      color: #ffd700;
+      margin: 40px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #ffd700;
+    }
+    .mockup-container {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+    .mockup-label {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    /* Player Intro Card */
+    .player-intro {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+      border: 2px solid #ffd700;
+      border-radius: 16px;
+      padding: 25px;
+      width: 450px;
+      display: flex;
+      gap: 20px;
+    }
+    .player-intro .photo {
+      width: 120px;
+      height: 150px;
+      background: linear-gradient(45deg, #333, #555);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: #666;
+    }
+    .player-intro .info {
+      flex: 1;
+    }
+    .player-intro .name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffd700;
+      margin-bottom: 5px;
+    }
+    .player-intro .nationality {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 15px;
+    }
+    .player-intro .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .player-intro .stat {
+      background: rgba(255,255,255,0.05);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .player-intro .stat-label {
+      font-size: 10px;
+      color: #888;
+      text-transform: uppercase;
+    }
+    .player-intro .stat-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    .player-intro .bracelet {
+      color: #ffd700;
+    }
+
+    /* Bottom Center Overlay */
+    .bottom-overlay {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+      border: 2px solid #ffd700;
+      border-radius: 12px;
+      padding: 15px 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 500px;
+    }
+    .bottom-overlay .flag {
+      font-size: 24px;
+    }
+    .bottom-overlay .player-name {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .bottom-overlay .divider {
+      width: 2px;
+      height: 30px;
+      background: #ffd700;
+    }
+    .bottom-overlay .chips-section {
+      text-align: center;
+    }
+    .bottom-overlay .chips-label {
+      font-size: 10px;
+      color: #888;
+      text-transform: uppercase;
+    }
+    .bottom-overlay .chips-value {
+      font-size: 22px;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    .bottom-overlay .bb-value {
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* At Risk of Elimination */
+    .at-risk {
+      background: linear-gradient(135deg, #2d1f1f 0%, #3d1a1a 100%);
+      border: 2px solid #ff6b6b;
+      border-radius: 12px;
+      padding: 15px 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 550px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,107,107,0.3); }
+      50% { box-shadow: 0 0 40px rgba(255,107,107,0.6); }
+    }
+    .at-risk .warning-icon {
+      font-size: 32px;
+      color: #ff6b6b;
+    }
+    .at-risk .player-name {
+      font-size: 18px;
+      font-weight: bold;
+      flex: 1;
+    }
+    .at-risk .status {
+      text-align: center;
+    }
+    .at-risk .status-label {
+      font-size: 10px;
+      color: #ff6b6b;
+      text-transform: uppercase;
+    }
+    .at-risk .chips-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ff6b6b;
+    }
+    .at-risk .payout-section {
+      text-align: center;
+      background: rgba(255,107,107,0.2);
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+    .at-risk .payout-label {
+      font-size: 10px;
+      color: #888;
+    }
+    .at-risk .payout-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ffd700;
+    }
+
+    /* Elimination Card */
+    .elimination-card {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border: 2px solid #666;
+      border-radius: 16px;
+      padding: 25px;
+      width: 400px;
+      text-align: center;
+    }
+    .elimination-card .eliminated-badge {
+      background: #ff6b6b;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    .elimination-card .name {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .elimination-card .nationality {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+    .elimination-card .result {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+    .elimination-card .result-item {
+      text-align: center;
+    }
+    .elimination-card .result-label {
+      font-size: 10px;
+      color: #888;
+      text-transform: uppercase;
+    }
+    .elimination-card .result-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    .elimination-card .result-value.position {
+      color: #ffd700;
+    }
+
+    /* Heads-Up Comparison */
+    .heads-up {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+      border: 2px solid #ffd700;
+      border-radius: 16px;
+      padding: 30px;
+      width: 700px;
+    }
+    .heads-up .title {
+      text-align: center;
+      font-size: 14px;
+      color: #ffd700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+    }
+    .heads-up .players {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .heads-up .player {
+      text-align: center;
+      width: 250px;
+    }
+    .heads-up .player-photo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(45deg, #333, #555);
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: #666;
+    }
+    .heads-up .player-name {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .heads-up .player-chips {
+      font-size: 18px;
+      color: #4ecdc4;
+      margin-bottom: 15px;
+    }
+    .heads-up .player-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      font-size: 12px;
+    }
+    .heads-up .stat-item {
+      background: rgba(255,255,255,0.05);
+      padding: 8px;
+      border-radius: 6px;
+    }
+    .heads-up .stat-label {
+      color: #888;
+      font-size: 10px;
+    }
+    .heads-up .stat-value {
+      font-weight: bold;
+      color: #ffd700;
+    }
+    .heads-up .vs {
+      font-size: 32px;
+      font-weight: bold;
+      color: #ffd700;
+    }
+    .heads-up .question {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 18px;
+      color: #ffd700;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: #ffd700; margin-bottom: 10px;">WSOP Broadcast Graphics - Player Info</h1>
+  <p style="color: #888; margin-bottom: 40px;">PRD-0001 Wireframe Mockups</p>
+
+  <!-- Player Intro Card -->
+  <h2 class="section-title">1. Player Intro Card</h2>
+  <div class="mockup-container">
+    <div>
+      <div class="mockup-label">Player Introduction - Full</div>
+      <div class="player-intro">
+        <div class="photo">P</div>
+        <div class="info">
+          <div class="name">Daniel Negreanu</div>
+          <div class="nationality">Las Vegas, USA</div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">WSOP Bracelets</div>
+              <div class="stat-value bracelet">6</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Total Earnings</div>
+              <div class="stat-value">$47.2M</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Final Tables</div>
+              <div class="stat-value">42</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">WSOP Wins</div>
+              <div class="stat-value bracelet">6</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Center Overlay -->
+  <h2 class="section-title">2. Bottom Center Overlay</h2>
+  <div class="mockup-container">
+    <div>
+      <div class="mockup-label">Current Stack Display</div>
+      <div class="bottom-overlay">
+        <span class="flag">US</span>
+        <span class="player-name">Daniel Negreanu</span>
+        <span class="divider"></span>
+        <div class="chips-section">
+          <div class="chips-label">Current Stack</div>
+          <div class="chips-value">2,845,000</div>
+          <div class="bb-value">142 BB</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- At Risk of Elimination -->
+  <h2 class="section-title">3. At Risk of Elimination</h2>
+  <div class="mockup-container">
+    <div>
+      <div class="mockup-label">Short Stack Warning</div>
+      <div class="at-risk">
+        <span class="warning-icon">!</span>
+        <span class="player-name">Elton Tsang</span>
+        <div class="status">
+          <div class="status-label">At Risk</div>
+          <div class="chips-value">185,000</div>
+          <div style="font-size: 11px; color: #888;">9 BB</div>
+        </div>
+        <div class="payout-section">
+          <div class="payout-label">If Eliminated</div>
+          <div class="payout-value">$25,000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Elimination Card -->
+  <h2 class="section-title">4. Elimination Card</h2>
+  <div class="mockup-container">
+    <div>
+      <div class="mockup-label">Player Eliminated</div>
+      <div class="elimination-card">
+        <div class="eliminated-badge">ELIMINATED</div>
+        <div class="name">Elton Tsang</div>
+        <div class="nationality">Hong Kong</div>
+        <div class="result">
+          <div class="result-item">
+            <div class="result-label">Finished</div>
+            <div class="result-value position">45th</div>
+          </div>
+          <div class="result-item">
+            <div class="result-label">Prize</div>
+            <div class="result-value">$25,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Heads-Up Comparison -->
+  <h2 class="section-title">5. Heads-Up Comparison</h2>
+  <div class="mockup-container">
+    <div>
+      <div class="mockup-label">Final 2 Players - ViewPoint Focused</div>
+      <div class="heads-up">
+        <div class="title">Heads Up Championship</div>
+        <div class="players">
+          <div class="player">
+            <div class="player-photo">B</div>
+            <div class="player-name">Ben C.B.</div>
+            <div class="player-chips">2,750,643 (69 BB)</div>
+            <div class="player-stats">
+              <div class="stat-item">
+                <div class="stat-label">Wins</div>
+                <div class="stat-value">3</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Final Tables</div>
+                <div class="stat-value">9</div>
+              </div>
+              <div class="stat-item" style="grid-column: span 2;">
+                <div class="stat-label">Total Earnings</div>
+                <div class="stat-value">$9,271,483</div>
+              </div>
+            </div>
+          </div>
+          <div class="vs">VS</div>
+          <div class="player">
+            <div class="player-photo">A</div>
+            <div class="player-name">Aleks Ponakovs</div>
+            <div class="player-chips">1,239,384 (31 BB)</div>
+            <div class="player-stats">
+              <div class="stat-item">
+                <div class="stat-label">Wins</div>
+                <div class="stat-value">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Final Tables</div>
+                <div class="stat-value">12</div>
+              </div>
+              <div class="stat-item" style="grid-column: span 2;">
+                <div class="stat-label">Total Earnings</div>
+                <div class="stat-value">$4,354,982</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="question">"Who's your Pick?"</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

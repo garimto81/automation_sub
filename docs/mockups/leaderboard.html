@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WSOP Leaderboard Mockups</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #1a1a2e;
+      color: white;
+      padding: 40px;
+    }
+    .section-title {
+      font-size: 24px;
+      color: #ffd700;
+      margin: 40px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #ffd700;
+    }
+    .mockup-container {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+    .mockup-label {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    /* Tournament Leaderboard */
+    .tournament-leaderboard {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+      border: 2px solid #ffd700;
+      border-radius: 12px;
+      padding: 20px;
+      width: 400px;
+    }
+    .tournament-leaderboard .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .tournament-leaderboard .title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffd700;
+    }
+    .tournament-leaderboard .remaining {
+      font-size: 12px;
+      color: #888;
+    }
+    .tournament-leaderboard .player-row {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      background: rgba(255,255,255,0.05);
+    }
+    .tournament-leaderboard .player-row:hover {
+      background: rgba(255,215,0,0.1);
+    }
+    .tournament-leaderboard .rank {
+      width: 30px;
+      font-weight: bold;
+      color: #ffd700;
+    }
+    .tournament-leaderboard .flag {
+      width: 24px;
+      height: 16px;
+      margin-right: 10px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      background: #333;
+    }
+    .tournament-leaderboard .name {
+      flex: 1;
+      font-weight: 500;
+    }
+    .tournament-leaderboard .chips {
+      text-align: right;
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    .tournament-leaderboard .bb {
+      width: 60px;
+      text-align: right;
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* Feature Table Leaderboard - 2 Tables */
+    .feature-leaderboard-2t {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+      border: 2px solid #ffd700;
+      border-radius: 12px;
+      padding: 20px;
+      width: 800px;
+    }
+    .feature-leaderboard-2t .tables-container {
+      display: flex;
+      gap: 20px;
+    }
+    .feature-leaderboard-2t .table-section {
+      flex: 1;
+    }
+    .feature-leaderboard-2t .table-header {
+      text-align: center;
+      padding: 10px;
+      background: rgba(255,215,0,0.2);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #ffd700;
+    }
+    .feature-leaderboard-2t .player-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      background: rgba(255,255,255,0.05);
+    }
+    .feature-leaderboard-2t .seat {
+      width: 25px;
+      font-size: 12px;
+      color: #666;
+    }
+    .feature-leaderboard-2t .flag {
+      width: 20px;
+      margin-right: 8px;
+      font-size: 10px;
+    }
+    .feature-leaderboard-2t .name {
+      flex: 1;
+      font-size: 14px;
+    }
+    .feature-leaderboard-2t .chips {
+      font-weight: bold;
+      color: #4ecdc4;
+      margin-right: 10px;
+    }
+    .feature-leaderboard-2t .percentage {
+      width: 50px;
+      text-align: right;
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* Mini Chip Counts */
+    .mini-chips-container {
+      display: flex;
+      gap: 20px;
+    }
+    .mini-chips {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+      border: 2px solid #ffd700;
+      border-radius: 8px;
+      padding: 15px;
+      width: 200px;
+    }
+    .mini-chips .header {
+      font-size: 12px;
+      color: #ffd700;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .mini-chips .player {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .mini-chips .player:last-child {
+      border-bottom: none;
+    }
+    .mini-chips .name {
+      font-size: 13px;
+    }
+    .mini-chips .amount {
+      font-weight: bold;
+      color: #4ecdc4;
+      font-size: 13px;
+    }
+    .mini-chips.highlight {
+      border-color: #ff6b6b;
+      box-shadow: 0 0 20px rgba(255,107,107,0.3);
+    }
+    .mini-chips.highlight .header {
+      color: #ff6b6b;
+    }
+    .mini-chips.pot-winner {
+      border-color: #4ecdc4;
+      box-shadow: 0 0 20px rgba(78,205,196,0.3);
+    }
+    .mini-chips.pot-winner .header {
+      color: #4ecdc4;
+    }
+
+    /* Mini Payouts */
+    .mini-payouts {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+      border: 2px solid #ffd700;
+      border-radius: 8px;
+      padding: 15px;
+      width: 180px;
+    }
+    .mini-payouts .header {
+      font-size: 12px;
+      color: #ffd700;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .mini-payouts .payout-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 13px;
+    }
+    .mini-payouts .position {
+      color: #888;
+    }
+    .mini-payouts .amount {
+      font-weight: bold;
+      color: #4ecdc4;
+    }
+    .mini-payouts.elimination {
+      border-color: #ff6b6b;
+    }
+    .mini-payouts.elimination .header {
+      color: #ff6b6b;
+    }
+    .mini-payouts.elimination .current {
+      background: rgba(255,107,107,0.2);
+      padding: 8px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    .mini-payouts.elimination .current .label {
+      font-size: 10px;
+      color: #ff6b6b;
+    }
+    .mini-payouts.elimination .current .value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ff6b6b;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: #ffd700; margin-bottom: 10px;">WSOP Broadcast Graphics - Leaderboard</h1>
+  <p style="color: #888; margin-bottom: 40px;">PRD-0001 Wireframe Mockups</p>
+
+  <!-- Tournament Leaderboard -->
+  <h2 class="section-title">1. Tournament Leaderboard (Overall)</h2>
+  <div class="mockup-container">
+    <div>
+      <div class="mockup-label">Tournament Leaderboard - Top 10</div>
+      <div class="tournament-leaderboard">
+        <div class="header">
+          <span class="title">CHIP COUNTS</span>
+          <span class="remaining">47 Players Remaining</span>
+        </div>
+        <div class="player-row">
+          <span class="rank">1</span>
+          <span class="flag">US</span>
+          <span class="name">Daniel Negreanu</span>
+          <span class="chips">2,845,000</span>
+          <span class="bb">142 BB</span>
+        </div>
+        <div class="player-row">
+          <span class="rank">2</span>
+          <span class="flag">UK</span>
+          <span class="name">Sam Trickett</span>
+          <span class="chips">2,120,000</span>
+          <span class="bb">106 BB</span>
+        </div>
+        <div class="player-row">
+          <span class="rank">3</span>
+          <span class="flag">DE</span>
+          <span class="name">Fedor Holz</span>
+          <span class="chips">1,890,000</span>
+          <span class="bb">94 BB</span>
+        </div>
+        <div class="player-row">
+          <span class="rank">4</span>
+          <span class="flag">CA</span>
+          <span class="name">Timothy Adams</span>
+          <span class="chips">1,650,000</span>
+          <span class="bb">82 BB</span>
+        </div>
+        <div class="player-row">
+          <span class="rank">5</span>
+          <span class="flag">US</span>
+          <span class="name">Phil Ivey</span>
+          <span class="chips">1,420,000</span>
+          <span class="bb">71 BB</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Table Leaderboard -->
+  <h2 class="section-title">2. Feature Table Leaderboard (2 Tables)</h2>
+  <div class="mockup-container">
+    <div>
+      <div class="mockup-label">2 Tables View - Opening/In-Game</div>
+      <div class="feature-leaderboard-2t">
+        <div class="tables-container">
+          <div class="table-section">
+            <div class="table-header">TABLE 1</div>
+            <div class="player-row">
+              <span class="seat">S1</span>
+              <span class="flag">US</span>
+              <span class="name">Daniel Negreanu</span>
+              <span class="chips">2.8M</span>
+              <span class="percentage">142%</span>
+            </div>
+            <div class="player-row">
+              <span class="seat">S2</span>
+              <span class="flag">UK</span>
+              <span class="name">Sam Trickett</span>
+              <span class="chips">2.1M</span>
+              <span class="percentage">106%</span>
+            </div>
+            <div class="player-row">
+              <span class="seat">S3</span>
+              <span class="flag">DE</span>
+              <span class="name">Fedor Holz</span>
+              <span class="chips">1.8M</span>
+              <span class="percentage">94%</span>
+            </div>
+            <div class="player-row">
+              <span class="seat">S4</span>
+              <span class="flag">CA</span>
+              <span class="name">Timothy Adams</span>
+              <span class="chips">1.6M</span>
+              <span class="percentage">82%</span>
+            </div>
+          </div>
+          <div class="table-section">
+            <div class="table-header">TABLE 2</div>
+            <div class="player-row">
+              <span class="seat">S1</span>
+              <span class="flag">US</span>
+              <span class="name">Phil Ivey</span>
+              <span class="chips">1.4M</span>
+              <span class="percentage">71%</span>
+            </div>
+            <div class="player-row">
+              <span class="seat">S2</span>
+              <span class="flag">BR</span>
+              <span class="name">Igor Kurganov</span>
+              <span class="chips">1.2M</span>
+              <span class="percentage">62%</span>
+            </div>
+            <div class="player-row">
+              <span class="seat">S3</span>
+              <span class="flag">AU</span>
+              <span class="name">Jeff Rossiter</span>
+              <span class="chips">980K</span>
+              <span class="percentage">49%</span>
+            </div>
+            <div class="player-row">
+              <span class="seat">S4</span>
+              <span class="flag">CN</span>
+              <span class="name">Elton Tsang</span>
+              <span class="chips">750K</span>
+              <span class="percentage">38%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini Chip Counts -->
+  <h2 class="section-title">3. Mini Chip Counts</h2>
+  <div class="mockup-container">
+    <div>
+      <div class="mockup-label">Normal</div>
+      <div class="mini-chips">
+        <div class="header">Chip Counts</div>
+        <div class="player">
+          <span class="name">Negreanu</span>
+          <span class="amount">2.8M</span>
+        </div>
+        <div class="player">
+          <span class="name">Trickett</span>
+          <span class="amount">2.1M</span>
+        </div>
+        <div class="player">
+          <span class="name">Holz</span>
+          <span class="amount">1.8M</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="mockup-label">Highlight (Key Player)</div>
+      <div class="mini-chips highlight">
+        <div class="header">Key Players</div>
+        <div class="player">
+          <span class="name">Phil Ivey</span>
+          <span class="amount">1.4M</span>
+        </div>
+        <div class="player">
+          <span class="name">Fedor Holz</span>
+          <span class="amount">1.8M</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="mockup-label">Pot Winner</div>
+      <div class="mini-chips pot-winner">
+        <div class="header">Pot Winner</div>
+        <div class="player">
+          <span class="name">Daniel Negreanu</span>
+          <span class="amount">+450K</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini Payouts -->
+  <h2 class="section-title">4. Mini Payouts</h2>
+  <div class="mockup-container">
+    <div>
+      <div class="mockup-label">Normal</div>
+      <div class="mini-payouts">
+        <div class="header">Payouts</div>
+        <div class="payout-row">
+          <span class="position">1</span>
+          <span class="amount">$2,500,000</span>
+        </div>
+        <div class="payout-row">
+          <span class="position">2</span>
+          <span class="amount">$1,500,000</span>
+        </div>
+        <div class="payout-row">
+          <span class="position">3</span>
+          <span class="amount">$1,000,000</span>
+        </div>
+        <div class="payout-row">
+          <span class="position">4</span>
+          <span class="amount">$750,000</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="mockup-label">Elimination Payout</div>
+      <div class="mini-payouts elimination">
+        <div class="header">Elimination</div>
+        <div class="payout-row">
+          <span class="position">45th</span>
+          <span class="amount">$25,000</span>
+        </div>
+        <div class="current">
+          <div class="label">NEXT PAYOUT</div>
+          <div class="value">$35,000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
