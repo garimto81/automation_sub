@@ -81,7 +81,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
   - ITM 후: 전체 (Top 50)
 
 #### 4.1.2 Feature Table Leaderboard
-![Feature Table Leaderboard](../images/slides/sc-feature-lb-2t.png)
+![Feature Table Leaderboard](../../docs/images/slides/sc-feature-lb-2t.png)
 
 - **2 Tables 버전**: 이름/국적/칩/BB/Percentage
 - **1 Table 버전**: 단일 테이블 상세 뷰
@@ -89,7 +89,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 - BB(Big Blind) 환산 표시
 
 #### 4.1.3 Mini Chip Counts ⭐ NEW
-![Mini Chip Counts](../images/slides/sc-mini-chips.png)
+![Mini Chip Counts](../../docs/images/slides/sc-mini-chips.png)
 - 플레이어 좌측/우측 공간 활용
 - **일반형**: 기본 칩 표시
 - **강조형 (Highlights)**: 주목 플레이어
@@ -112,14 +112,14 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 **Priority**: High | **Effort**: Medium
 
 #### 4.2.1 Chip Comparison ⭐ NEW
-![Chip Comparison](../images/slides/sc-chip-comparison.png)
+![Chip Comparison](../../docs/images/slides/sc-chip-comparison.png)
 
 - 플레이어 좌측/우측 공간 필요
 - 보유 스택 비율 시각화
 - 2인 이상 비교 지원
 
 #### 4.2.2 Chip Flow
-![Chip Flow](../images/slides/lv-chip-flow.png)
+![Chip Flow](../../docs/images/slides/lv-chip-flow.png)
 
 > "토너먼트 레귤러 입장에서 가장 참고할 가치가 높은 정보"
 
@@ -132,7 +132,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 - **표시 타이밍**: 게임 시작 / Break 후 3핸드 이내
 
 #### 4.2.4 VPIP / PFR Stats ⭐ NEW
-![VPIP Stats](../images/slides/lv-vpip.png)
+![VPIP Stats](../../docs/images/slides/lv-vpip.png)
 
 - 플레이어 중앙 하단 공간
 - **VPIP**: <10% 또는 >45% 극단적 기준
@@ -144,7 +144,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 **Priority**: High | **Effort**: Medium
 
 #### 4.3.1 Bottom Center Overlay ⭐ NEW
-![Bottom Center Overlay](../images/slides/sc-player-overlay.png)
+![Bottom Center Overlay](../../docs/images/slides/sc-player-overlay.png)
 
 - 플레이어 중앙 하단 공간
 - **Player Profile**: 기본 정보
@@ -158,13 +158,13 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 - WSOP 브레이슬릿 수, 총 상금
 
 #### 4.3.3 At Risk of Elimination ⭐ NEW
-![At Risk of Elimination](../images/slides/sc-at-risk.png)
+![At Risk of Elimination](../../docs/images/slides/sc-at-risk.png)
 
 - 플레이어 중앙 하단 공간
 - **탈락 시 Payout 표기** - 긴장감 제공
 
 #### 4.3.4 Heads-Up Comparison
-![Heads-Up Comparison](../images/slides/lv-heads-up.png)
+![Heads-Up Comparison](../../docs/images/slides/lv-heads-up.png)
 
 > ViewPoint 제공이 Priority - 단순 정보 나열 X
 
@@ -195,7 +195,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 | **Blind Level** | 블라인드 레벨 변경 시 | 레벨마다 |
 
 #### Blind Level Graphic
-![Blinds Up](../images/slides/lv-blinds-up.png)
+![Blinds Up](../../docs/images/slides/lv-blinds-up.png)
 
 - 현재 블라인드 레벨
 - 이전 블라인드
@@ -570,33 +570,33 @@ HEAD OF PRODUCTION
 ### C. Wireframe Mockups
 
 #### C.1 Leaderboard System
-![Leaderboard Mockup](../images/leaderboard-mockup.png)
+![Leaderboard Mockup](../../docs/images/leaderboard-mockup.png)
 - Tournament Leaderboard (Overall)
 - Feature Table Leaderboard (2 Tables)
 - Mini Chip Counts (Normal/Highlight/Pot Winner)
 - Mini Payouts (Normal/Elimination)
 
-**HTML Source**: [leaderboard.html](../mockups/leaderboard.html)
+**HTML Source**: [leaderboard.html](../../docs/mockups/leaderboard.html)
 
 #### C.2 Player Info System
-![Player Info Mockup](../images/player-info-mockup.png)
+![Player Info Mockup](../../docs/images/player-info-mockup.png)
 - Player Intro Card
 - Bottom Center Overlay
 - At Risk of Elimination
 - Elimination Card
 - Heads-Up Comparison
 
-**HTML Source**: [player-info.html](../mockups/player-info.html)
+**HTML Source**: [player-info.html](../../docs/mockups/player-info.html)
 
 #### C.3 Statistics
-![Statistics Mockup](../images/statistics-mockup.png)
+![Statistics Mockup](../../docs/images/statistics-mockup.png)
 - Chip Comparison
 - Chip Flow (Last N Hands)
 - Chips In Play (Chip Denomination)
 - VPIP / PFR Stats
 - Blind Level
 
-**HTML Source**: [statistics.html](../mockups/statistics.html)
+**HTML Source**: [statistics.html](../../docs/mockups/statistics.html)
 
 
 ---
