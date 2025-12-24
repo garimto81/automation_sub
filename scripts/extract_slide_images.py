@@ -76,12 +76,12 @@ def sanitize_filename(name: str) -> str:
 
 
 def extract_slide_title(slide: Dict) -> str:
-    """슬라이드에서 제목 추출"""
+    """슬라이드에서 제목 추출 (placeholder + 첫 번째 큰 텍스트)"""
+    # 1. 제목 placeholder 찾기
     for element in slide.get('pageElements', []):
         shape = element.get('shape', {})
         placeholder = shape.get('placeholder', {})
 
-        # 제목 placeholder 찾기
         if placeholder.get('type') in ['TITLE', 'CENTERED_TITLE']:
             text_elements = shape.get('text', {}).get('textElements', [])
             for te in text_elements:
@@ -89,6 +89,30 @@ def extract_slide_title(slide: Dict) -> str:
                 content = text_run.get('content', '').strip()
                 if content:
                     return content
+
+    # 2. 첫 번째 큰 텍스트 박스에서 제목 추출 (상단에 위치한 것)
+    text_elements_with_pos = []
+    for element in slide.get('pageElements', []):
+        shape = element.get('shape', {})
+        text_content = shape.get('text', {})
+        if not text_content:
+            continue
+
+        # 위치 정보
+        transform = element.get('transform', {})
+        y_pos = transform.get('translateY', 999999)
+
+        # 텍스트 추출
+        for te in text_content.get('textElements', []):
+            text_run = te.get('textRun', {})
+            content = text_run.get('content', '').strip()
+            if content and len(content) > 3:  # 짧은 텍스트 제외
+                text_elements_with_pos.append((y_pos, content))
+
+    # 상단에 있는 텍스트를 제목으로 사용
+    if text_elements_with_pos:
+        text_elements_with_pos.sort(key=lambda x: x[0])
+        return text_elements_with_pos[0][1]
 
     return ''
 
@@ -152,11 +176,17 @@ def extract_images_from_presentation(
                 response = requests.get(content_url, timeout=30)
                 response.raise_for_status()
 
+                # 파일 크기로 필터링 (100KB 미만 = 아이콘/로고, 제외)
+                MIN_FILE_SIZE = 100 * 1024  # 100KB
+                if len(response.content) < MIN_FILE_SIZE:
+                    continue
+
                 # 저장
                 with open(final_path, 'wb') as f:
                     f.write(response.content)
 
-                print(f"  [{slide_idx}] {final_path.name}")
+                size_kb = len(response.content) / 1024
+                print(f"  [{slide_idx}] {final_path.name} ({size_kb:.0f}KB)")
 
                 extracted.append({
                     'slide_index': slide_idx,
