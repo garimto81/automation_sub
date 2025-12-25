@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>WSOP Broadcast Graphics Layout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #E31937;
+            --bg-dark: rgba(0, 0, 0, 0.85);
+            --bg-semi: rgba(0, 0, 0, 0.7);
+            --text-white: #FFFFFF;
+            --text-gray: #888888;
+            --success-green: #00C853;
+            --danger-red: #FF1744;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a2e;
+            color: var(--text-white);
+            width: 1920px;
+            height: 1080px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Main Video Area */
+        .main-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1520px;
+            height: 855px;
+            background: linear-gradient(135deg, #2d3436 0%, #1a1a2e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-video::after {
+            content: 'MAIN VIDEO FEED';
+            font-size: 48px;
+            color: rgba(255,255,255,0.2);
+            font-weight: bold;
+        }
+
+        /* Right Panel - Mini Leaderboard & Payouts */
+        .right-panel {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 855px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        /* Mini Leaderboard */
+        .mini-leaderboard {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+        }
+
+        .mini-leaderboard h3 {
+            text-transform: uppercase;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--text-gray);
+        }
+
+        .leaderboard-header {
+            display: grid;
+            grid-template-columns: 30px 1fr 80px 50px;
+            background: var(--primary-red);
+            padding: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .leaderboard-row {
+            display: grid;
+            grid-template-columns: 30px 1fr 80px 50px;
+            padding: 6px 8px;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            align-items: center;
+        }
+
+        .leaderboard-row.highlight {
+            background: var(--primary-red);
+            border-radius: 4px;
+        }
+
+        .leaderboard-row .rank {
+            font-weight: bold;
+        }
+
+        .leaderboard-row .player {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .leaderboard-row .flag {
+            width: 16px;
+            height: 11px;
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        .leaderboard-row .chips {
+            text-align: right;
+            font-family: monospace;
+        }
+
+        .leaderboard-row .change {
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .leaderboard-row .change.up { color: var(--success-green); }
+        .leaderboard-row .change.down { color: var(--danger-red); }
+
+        .avg-stack {
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--text-gray);
+            text-align: right;
+        }
+
+        /* Mini Payouts */
+        .mini-payouts {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 300px;
+        }
+
+        .mini-payouts h3 {
+            text-transform: uppercase;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--text-gray);
+        }
+
+        .payout-row {
+            display: grid;
+            grid-template-columns: 30px 1fr;
+            padding: 5px 8px;
+            font-size: 12px;
+        }
+
+        .payout-row .amount {
+            text-align: right;
+            color: var(--primary-red);
+            font-weight: bold;
+        }
+
+        .payout-row.current {
+            background: var(--primary-red);
+            border-radius: 4px;
+        }
+
+        .payout-row.current .amount {
+            color: var(--text-white);
+        }
+
+        /* Bottom L-Bar */
+        .l-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 225px;
+            background: var(--bg-dark);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .l-bar-top {
+            display: flex;
+            height: 60px;
+            border-bottom: 2px solid var(--primary-red);
+        }
+
+        .blinds-info {
+            background: var(--primary-red);
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 200px;
+        }
+
+        .blinds-info .label {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        .blinds-info .value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .table-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 30px;
+        }
+
+        .table-info .seat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .table-info .seat .name {
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .table-info .seat .chips {
+            color: var(--text-gray);
+            font-size: 10px;
+        }
+
+        .pot-info {
+            background: var(--bg-semi);
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: right;
+        }
+
+        .pot-info .label {
+            font-size: 10px;
+            color: var(--text-gray);
+        }
+
+        .pot-info .value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-red);
+        }
+
+        /* L-Bar Bottom - Schedule & Score */
+        .l-bar-bottom {
+            flex: 1;
+            display: flex;
+        }
+
+        .field-info {
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.3);
+            min-width: 200px;
+        }
+
+        .field-info .row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .field-info .row .label {
+            color: var(--text-gray);
+        }
+
+        .schedule-panel {
+            flex: 1;
+            padding: 10px 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .schedule-item {
+            display: flex;
+            flex-direction: column;
+            font-size: 11px;
+            min-width: 150px;
+        }
+
+        .schedule-item .date {
+            color: var(--text-gray);
+            font-size: 10px;
+        }
+
+        .schedule-item .event {
+            font-weight: bold;
+        }
+
+        .schedule-item.live {
+            background: var(--primary-red);
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        .score-ticker {
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 200px;
+        }
+
+        .score-ticker .teams {
+            display: flex;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Center Overlays */
+        .center-overlay {
+            position: absolute;
+            bottom: 240px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Chip Comparison */
+        .chip-comparison {
+            background: var(--bg-dark);
+            padding: 15px;
+            border-radius: 8px;
+            width: 200px;
+        }
+
+        .chip-comparison h4 {
+            font-size: 11px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .pie-chart {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-red) 0% 77%, var(--text-gray) 77% 100%);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pie-chart .center {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .pie-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+        }
+
+        .pie-legend .item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pie-legend .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .pie-legend .dot.red { background: var(--primary-red); }
+        .pie-legend .dot.gray { background: var(--text-gray); }
+
+        /* Player Info Banner */
+        .player-info-banner {
+            background: linear-gradient(90deg, var(--primary-red), #c41230);
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .player-info-banner .flag {
+            width: 24px;
+            height: 16px;
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        .player-info-banner .name {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .player-info-banner .stack {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Chip Flow */
+        .chip-flow {
+            background: var(--bg-dark);
+            padding: 15px;
+            border-radius: 8px;
+            width: 350px;
+        }
+
+        .chip-flow h4 {
+            font-size: 11px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .chip-flow .player {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .chip-flow .player .flag {
+            width: 16px;
+            height: 11px;
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        .chip-flow .chart {
+            height: 80px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chip-flow .chart .line {
+            position: absolute;
+            bottom: 20%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-red);
+            clip-path: polygon(0% 80%, 20% 60%, 40% 70%, 60% 30%, 80% 40%, 100% 20%, 100% 100%, 0% 100%);
+            height: 60%;
+            opacity: 0.3;
+        }
+
+        .chip-flow .chart .line-stroke {
+            position: absolute;
+            bottom: 20%;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            border-top: 2px solid var(--primary-red);
+            clip-path: polygon(0% 80%, 20% 60%, 40% 70%, 60% 30%, 80% 40%, 100% 20%);
+        }
+
+        .chip-flow .current-value {
+            position: absolute;
+            right: 10px;
+            top: 15px;
+            background: var(--primary-red);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .chip-flow .x-axis {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-gray);
+            margin-top: 5px;
+        }
+
+        /* At Risk Banner */
+        .at-risk-banner {
+            position: absolute;
+            bottom: 240px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, rgba(227,25,55,0.9), rgba(180,20,45,0.9));
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-align: center;
+            animation: pulse 1s infinite;
+            display: none;
+        }
+
+        .at-risk-banner.show {
+            display: block;
+        }
+
+        .at-risk-banner .title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .at-risk-banner .payout {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* WSOP Logo */
+        .wsop-logo {
+            position: absolute;
+            top: 20px;
+            right: 420px;
+            width: 80px;
+            height: 80px;
+            background: var(--bg-semi);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Sponsors */
+        .sponsors {
+            position: absolute;
+            bottom: 235px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .sponsors .logo {
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Video Area -->
+    <div class="main-video"></div>
+
+    <!-- WSOP Logo -->
+    <div class="wsop-logo">WSOP<br>CYPRUS</div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+        <!-- Mini Leaderboard -->
+        <div class="mini-leaderboard">
+            <h3>Mini Leaderboard</h3>
+            <div class="leaderboard-header">
+                <span>#</span>
+                <span>PLAYERS</span>
+                <span>CHIPS</span>
+                <span>BBs</span>
+            </div>
+            <div class="leaderboard-row highlight">
+                <span class="rank">1</span>
+                <span class="player"><span class="flag"></span>REZAEI</span>
+                <span class="chips">10,720,000</span>
+                <span class="change up">▲2</span>
+            </div>
+            <div class="leaderboard-row">
+                <span class="rank">2</span>
+                <span class="player"><span class="flag"></span>DALKILIC</span>
+                <span class="chips">8,780,000</span>
+                <span class="change">-</span>
+            </div>
+            <div class="leaderboard-row">
+                <span class="rank">3</span>
+                <span class="player"><span class="flag"></span>RAZINKOV</span>
+                <span class="chips">3,645,000</span>
+                <span class="change down">▼1</span>
+            </div>
+            <div class="leaderboard-row">
+                <span class="rank">4</span>
+                <span class="player"><span class="flag"></span>ANZULEWICZ</span>
+                <span class="chips">2,875,000</span>
+                <span class="change">-</span>
+            </div>
+            <div class="leaderboard-row">
+                <span class="rank">5</span>
+                <span class="player"><span class="flag"></span>SOUZA</span>
+                <span class="chips">2,085,000</span>
+                <span class="change up">▲1</span>
+            </div>
+            <div class="leaderboard-row">
+                <span class="rank">6</span>
+                <span class="player"><span class="flag"></span>ABDOLVAND</span>
+                <span class="chips">2,075,000</span>
+                <span class="change">-</span>
+            </div>
+            <div class="leaderboard-row">
+                <span class="rank">7</span>
+                <span class="player"><span class="flag"></span>VORONIN</span>
+                <span class="chips">2,050,000</span>
+                <span class="change down">▼2</span>
+            </div>
+            <div class="leaderboard-row">
+                <span class="rank">8</span>
+                <span class="player"><span class="flag"></span>SAMMER</span>
+                <span class="chips">2,045,000</span>
+                <span class="change">-</span>
+            </div>
+            <div class="avg-stack">AVERAGE STACK: 4,284,375</div>
+        </div>
+
+        <!-- Mini Payouts -->
+        <div class="mini-payouts">
+            <h3>Final Table Payouts</h3>
+            <div class="payout-row">
+                <span>1</span>
+                <span class="amount">$1,000,000</span>
+            </div>
+            <div class="payout-row">
+                <span>2</span>
+                <span class="amount">$670,000</span>
+            </div>
+            <div class="payout-row">
+                <span>3</span>
+                <span class="amount">$475,000</span>
+            </div>
+            <div class="payout-row">
+                <span>4</span>
+                <span class="amount">$345,000</span>
+            </div>
+            <div class="payout-row">
+                <span>5</span>
+                <span class="amount">$250,000</span>
+            </div>
+            <div class="payout-row">
+                <span>6</span>
+                <span class="amount">$185,000</span>
+            </div>
+            <div class="payout-row">
+                <span>7</span>
+                <span class="amount">$140,000</span>
+            </div>
+            <div class="payout-row current">
+                <span>8</span>
+                <span class="amount">$107,500</span>
+            </div>
+            <div class="payout-row">
+                <span>9</span>
+                <span class="amount">$82,000</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Center Overlays -->
+    <div class="center-overlay">
+        <!-- Chip Comparison -->
+        <div class="chip-comparison">
+            <h4>Chip Comparison</h4>
+            <div class="pie-chart">
+                <div class="center">77%</div>
+            </div>
+            <div class="pie-legend">
+                <div class="item"><span class="dot red"></span>SAMMER</div>
+                <div class="item"><span class="dot gray"></span>REZAEI</div>
+            </div>
+        </div>
+
+        <!-- Player Info Banner -->
+        <div class="player-info-banner">
+            <div class="flag"></div>
+            <div>
+                <div class="name">ANDREI SPATARU</div>
+                <div class="stack">CURRENT STACK - 1,025,000 (5BB)</div>
+            </div>
+        </div>
+
+        <!-- Chip Flow -->
+        <div class="chip-flow">
+            <h4>Chip Flow</h4>
+            <div class="player">
+                <div class="flag"></div>
+                <span>VORONIN</span>
+            </div>
+            <div class="chart">
+                <div class="line"></div>
+                <div class="line-stroke"></div>
+                <div class="current-value">595,000</div>
+            </div>
+            <div class="x-axis">LAST 15 HANDS</div>
+        </div>
+    </div>
+
+    <!-- At Risk Banner (Hidden by default) -->
+    <div class="at-risk-banner">
+        <div class="title">AT RISK OF ELIMINATION - 40TH</div>
+        <div class="payout">$23,400</div>
+    </div>
+
+    <!-- Bottom L-Bar -->
+    <div class="l-bar">
+        <div class="l-bar-top">
+            <div class="blinds-info">
+                <div class="label">BLINDS</div>
+                <div class="value">40K / 80K - 80K</div>
+            </div>
+            <div class="table-info">
+                <div class="seat"><span class="name">REZAEI</span><span class="chips">10.7M</span></div>
+                <div class="seat"><span class="name">DALKILIC</span><span class="chips">8.7M</span></div>
+                <div class="seat"><span class="name">RAZINKOV</span><span class="chips">3.6M</span></div>
+                <div class="seat"><span class="name">ANZULEWICZ</span><span class="chips">2.8M</span></div>
+                <div class="seat"><span class="name">SOUZA</span><span class="chips">2.0M</span></div>
+                <div class="seat"><span class="name">ABDOLVAND</span><span class="chips">2.0M</span></div>
+                <div class="seat"><span class="name">VORONIN</span><span class="chips">2.0M</span></div>
+                <div class="seat"><span class="name">SAMMER</span><span class="chips">2.0M</span></div>
+            </div>
+            <div class="pot-info">
+                <div class="label">POT</div>
+                <div class="value">1.8M</div>
+            </div>
+        </div>
+        <div class="l-bar-bottom">
+            <div class="field-info">
+                <div class="row"><span class="label">FIELD</span><span>40 / 512</span></div>
+                <div class="row"><span class="label">AVG</span><span>856,875</span></div>
+                <div class="row"><span class="label">NEXT BREAK</span><span>45:00</span></div>
+            </div>
+            <div class="schedule-panel">
+                <div class="schedule-item">
+                    <span class="date">OCT 16</span>
+                    <span class="event">MAIN EVENT DAY 1A</span>
+                </div>
+                <div class="schedule-item">
+                    <span class="date">OCT 17</span>
+                    <span class="event">MAIN EVENT DAY 1B</span>
+                </div>
+                <div class="schedule-item">
+                    <span class="date">OCT 19</span>
+                    <span class="event">MAIN EVENT DAY 2</span>
+                </div>
+                <div class="schedule-item live">
+                    <span class="date">OCT 21</span>
+                    <span class="event">MAIN EVENT FINAL DAY</span>
+                </div>
+            </div>
+            <div class="score-ticker">
+                <div class="teams">
+                    <span>BKN 88</span>
+                    <span>-</span>
+                    <span>PHI 107</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sponsors -->
+    <div class="sponsors">
+        <div class="logo">LuxonPay</div>
+        <div class="logo">Merit Poker</div>
+    </div>
+</body>
+</html>

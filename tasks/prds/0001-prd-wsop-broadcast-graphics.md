@@ -1,9 +1,15 @@
 # PRD: WSOP Broadcast Graphics System
 
 **PRD Number**: PRD-0001
-**Version**: 2.0
-**Date**: 2025-12-23
+**Version**: 2.1
+**Date**: 2025-12-24
 **Status**: Draft
+
+### Changelog
+| Version | Date | Changes |
+|---------|------|---------|
+| 2.1 | 2025-12-24 | 자막 디자인 분석 결과 반영 (색상 팔레트, 타이포그래피, 애니메이션 가이드, 디자인 이미지 참조) |
+| 2.0 | 2025-12-23 | Initial PRD |
 
 ### Source Documents
 | Event | Document |
@@ -72,6 +78,9 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 **Priority**: High | **Effort**: High
 
 #### 4.1.1 Tournament Leaderboard (Overall)
+
+![Tournament Leaderboard](../../docs/images/captions/lv-caption-26-tournament-leaderboard(s)-3.png)
+
 - 전체 참가자 순위 (칩 기준)
 - **스크롤 지원** - 많은 플레이어 표시
 - Day별 표시 기준:
@@ -80,7 +89,11 @@ Final Day        ████░░░░░░░░░░░░░░░░░
   - Bubble 직전: Bottom 20 (Notable 있을 때)
   - ITM 후: 전체 (Top 50)
 
+**디자인 요소**: 타이틀(TOURNAMENT LEADERBOARD) + 빨간 헤더(PLAYERS/CHIPS/BBs) + 국기 + 순위 번호
+
 #### 4.1.2 Feature Table Leaderboard
+
+![Feature Table Leaderboard](../../docs/images/captions/lv-caption-31-main_leaderboard-3.png)
 
 - **2 Tables 버전**: 이름/국적/칩/BB/Percentage
 - **1 Table 버전**: 단일 테이블 상세 뷰
@@ -94,11 +107,17 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 - **Pot Winner**: 팟 획득 시 표시
 
 #### 4.1.4 Payouts
+
+![Payouts](../../docs/images/captions/lv-caption-24-main_payouts-3.png)
+
 - 상금 구조 테이블 (1st-9th)
 - 현재 버블 라인 강조
 - ITM(In The Money) 표시
 
 #### 4.1.5 Mini Payouts ⭐ NEW
+
+![Mini Payouts](../../docs/images/captions/lv-caption-36-mini_payouts-3.png)
+
 - 플레이어 좌측/우측 공간 활용
 - **일반형**: 현재 상금 구조
 - **강조형**: 다음 페이점프
@@ -111,12 +130,15 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 
 #### 4.2.1 Chip Comparison ⭐ NEW
 
+![Chip Comparison](../../docs/images/captions/lv-caption-52-chip-comparison-5.png)
+
 - 플레이어 좌측/우측 공간 필요
 - 보유 스택 비율 시각화
 - 2인 이상 비교 지원
 
 #### 4.2.2 Chip Flow
-![Chip Flow](../../docs/images/slides/lv-graphic(special)-1.png)
+
+![Chip Flow](../../docs/images/captions/lv-caption-41-chip-flow-3.png)
 
 > "토너먼트 레귤러 입장에서 가장 참고할 가치가 높은 정보"
 
@@ -124,11 +146,18 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 - **Last N Hands** 기준 표시
 - X축: Hand Number, Y축: Avg% 대비
 
+**디자인 요소**: 타이틀(CHIP FLOW) + 국기+플레이어명 + 빨간색 라인 차트 + 현재값 마커
+
 #### 4.2.3 Chips In Play (Chip Denomination) ⭐ NEW
+
+![Chips In Play](../../docs/images/captions/lv-caption-42-chips-in-play-3.png)
+
 - 칩스택 좌측/우측 공간
 - **표시 타이밍**: 게임 시작 / Break 후 3핸드 이내
 
 #### 4.2.4 VPIP / PFR Stats ⭐ NEW
+
+![VPIP Stats](../../docs/images/captions/lv-caption-51-vpip-2.png)
 
 - 플레이어 중앙 하단 공간
 - **VPIP**: <10% 또는 >45% 극단적 기준
@@ -141,6 +170,8 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 
 #### 4.3.1 Bottom Center Overlay ⭐ NEW
 
+![Bottom Center Overlay](../../docs/images/captions/lv-caption-37-player-profile-elimination-3.png)
+
 - 플레이어 중앙 하단 공간
 - **Player Profile**: 기본 정보
 - **Elimination**: 탈락 정보
@@ -148,16 +179,26 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 - **ETC**: 기타 정보
 
 #### 4.3.2 Player Intro Card
+
+![Player Intro Card](../../docs/images/captions/lv-caption-56-player-intro-card-2.png)
+
 - 플레이어 입장/소개 시 사용
 - 이름, 국적, 주요 성적
 - WSOP 브레이슬릿 수, 총 상금
 
 #### 4.3.3 At Risk of Elimination ⭐ NEW
 
+![At Risk](../../docs/images/captions/lv-caption-50-at-risk-of-elimination-2.png)
+
 - 플레이어 중앙 하단 공간
 - **탈락 시 Payout 표기** - 긴장감 제공
+- 예: "AT RISK OF ELIMINATION - 40TH ($23,400)"
+
+**디자인 요소**: 빨간 배너 + 순위 + Payout 금액 + 펄스 애니메이션
 
 #### 4.3.4 Heads-Up Comparison
+
+![Heads-Up Comparison](../../docs/images/captions/lv-caption-54-heads-up-2.png)
 
 > ViewPoint 제공이 Priority - 단순 정보 나열 X
 
@@ -188,6 +229,8 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 | **Blind Level** | 블라인드 레벨 변경 시 | 레벨마다 |
 
 #### Blind Level Graphic
+
+![Blind Level](../../docs/images/captions/lv-caption-49-blinds-up-2.png)
 
 - 현재 블라인드 레벨
 - 이전 블라인드
@@ -416,12 +459,78 @@ interface HandPlayer {
   - ❌ `1st`, `2nd`, `3rd`
   - ✅ `1`, `2`, `3`
 
-### 8.2 공간 배치
+### 8.2 색상 팔레트
+
+| 용도 | 색상 | HEX | 사용처 |
+|-----|-----|-----|-------|
+| **배경** | 어두운 반투명 | `rgba(0,0,0,0.85)` | 모든 그래픽 박스 |
+| **강조** | 빨간색 | `#E31937` | 헤더, 현재 항목, 경고 |
+| **보조** | 파란색 | `#1E90FF` | Heads-Up 우측 플레이어 |
+| **텍스트** | 흰색 | `#FFFFFF` | 기본 텍스트 |
+| **서브텍스트** | 회색 | `#888888` | 보조 정보 |
+| **상승** | 녹색 | `#00C853` | 순위 상승 (▲) |
+| **하락** | 빨간색 | `#FF1744` | 순위 하락 (▼) |
+
+### 8.3 타이포그래피
+
+| 용도 | 스타일 | 예시 |
+|-----|-------|-----|
+| **타이틀** | 대문자, 굵은 글씨, 흰색 | TOURNAMENT LEADERBOARD |
+| **서브타이틀** | 소문자, 회색 | Super Circuit Cyprus |
+| **플레이어명** | 대문자, 굵은 글씨 | GEORGIOS TSOULOFTAS |
+| **숫자 (칩)** | 우측 정렬, 고정폭 폰트 | 10,720,000 |
+| **숫자 (상금)** | 빨간색, 우측 정렬 | $1,000,000 |
+
+### 8.4 공통 UI 요소
+
+| 요소 | 스타일 | 비고 |
+|-----|-------|-----|
+| **국기 아이콘** | 16x11px | 플레이어명 좌측 배치 |
+| **WSOP 로고** | 80x80px 원형 | 우상단 고정 |
+| **스폰서 로고** | 하단 중앙 | LuxonPay, Merit Poker |
+| **헤더 행** | 빨간 배경 + 흰색 텍스트 | PLAYERS / CHIPS / BBs |
+| **강조 행** | 빨간 배경 또는 빨간 테두리 | 현재 순위, 주목 플레이어 |
+| **순위 변동** | ▲ 녹색 / ▼ 빨간색 | 숫자와 함께 표시 (▲2) |
+
+### 8.5 공간 배치
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                                                [WSOP]   │
+│  ┌────────────────────────────────────┐    ┌─────────┐ │
+│  │                                    │    │ MINI    │ │
+│  │         MAIN VIDEO                 │    │ LEADER  │ │
+│  │                                    │    │ BOARD   │ │
+│  │  [CHIP COMP]  [PLAYER]  [CHIP FLOW]│    ├─────────┤ │
+│  │                                    │    │ MINI    │ │
+│  └────────────────────────────────────┘    │ PAYOUTS │ │
+│                                            └─────────┘ │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │  L-BAR: BLINDS | SEATS | SCHEDULE | SCORE       │   │
+│  └─────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
+```
 
 | 위치 | 그래픽 |
 |------|--------|
 | **중앙 하단** | Chip Flow, VPIP/PFR, Player Profile, At Risk |
 | **좌측/우측** | Chip Comparison, Mini Chip Counts, Mini Payouts, Chips In Play |
+| **우측 패널** | Mini Leaderboard, Mini Payouts |
+| **하단 L-Bar** | Blinds, Seats, Schedule, Score |
+
+### 8.6 애니메이션 가이드
+
+| 효과 | 타이밍 | 용도 |
+|-----|-------|-----|
+| **페이드 인** | 0.3s ease-out | 그래픽 등장 |
+| **슬라이드 인** | 0.5s ease-out | 사이드 패널 |
+| **펄스** | 1s infinite | 강조/경고 상황 (At Risk) |
+| **카운트업** | 0.5s | 숫자 변경 |
+| **깜빡임** | 0.5s × 3회 | 탈락/알림 |
+| **순위 변동** | 0.3s | 행 위치 이동 |
+
+**HTML 목업**: [broadcast-layout.html](../../docs/mockups/broadcast-layout.html)
+**레이아웃 프리뷰**: [broadcast-layout-preview.png](../../docs/images/broadcast-layout-preview.png)
 
 ---
 
@@ -559,33 +668,75 @@ HEAD OF PRODUCTION
 - [2025 WSOP SC Cyprus Production Plan](https://docs.google.com/presentation/d/1QSIWvvdksgSmRA1oXyn0_ZIRFhOtVd5PSCQ6NeirhZs/)
 - Virtual Table 프로젝트 통합 운영 가이드
 
-### C. Wireframe Mockups
+### C. Design Image References
+
+> 슬라이드 20-62에서 추출된 자막 디자인 이미지 참조
 
 #### C.1 Leaderboard System
-- Tournament Leaderboard (Overall)
-- Feature Table Leaderboard (2 Tables)
-- Mini Chip Counts (Normal/Highlight/Pot Winner)
-- Mini Payouts (Normal/Elimination)
 
-**HTML Source**: [leaderboard.html](../../docs/mockups/leaderboard.html)
+| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|----------|-------------|-------------|
+| **Tournament Leaderboard** | ![](../../docs/images/captions/lv-caption-26-tournament-leaderboard(s)-3.png) | 타이틀 + 빨간 헤더 + 10행 순위 |
+| **Feature Table LB** | ![](../../docs/images/captions/lv-caption-31-main_leaderboard-3.png) | LEADERBOARD TABLE 1 + BLINDS |
+| **Mini Leaderboard** | ![](../../docs/images/captions/lv-caption-33-mini_leaderboard-3.png) | 10행 + 순위변동(▲▼) + AVG STACK |
+| **Payouts** | ![](../../docs/images/captions/lv-caption-24-main_payouts-3.png) | 1-9위 상금 + TOTAL PRIZE |
+| **Mini Payouts** | ![](../../docs/images/captions/lv-caption-36-mini_payouts-3.png) | FINAL TABLE + 상금 리스트 |
+
+**디자인 이미지 경로**: `docs/images/captions/lv-caption-*.png`
 
 #### C.2 Player Info System
-- Player Intro Card
-- Bottom Center Overlay
-- At Risk of Elimination
-- Elimination Card
-- Heads-Up Comparison
 
-**HTML Source**: [player-info.html](../../docs/mockups/player-info.html)
+| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|----------|-------------|-------------|
+| **Player Profile** | ![](../../docs/images/captions/lv-caption-37-player-profile-elimination-3.png) | 빨간 배너 + 국기 + 이름 + CURRENT STACK |
+| **At Risk of Elimination** | ![](../../docs/images/captions/lv-caption-50-at-risk-of-elimination-2.png) | 빨간 배너 + 순위 + Payout ($23,400) |
+| **Commentator Profile** | ![](../../docs/images/captions/lv-caption-21-commentator-profile-3.png) | 2인 프로필 + COMMENTATOR 라벨 |
+| **Heads-Up Frame** | ![](../../docs/images/captions/lv-caption-53-heads-up-4.png) | 골드 원형 프레임 + 월계관 + 별 |
+| **Heads-Up VS** | ![](../../docs/images/captions/lv-caption-54-heads-up-2.png) | VS 레이아웃 + 노란/파란 배경 |
 
 #### C.3 Statistics
-- Chip Comparison
-- Chip Flow (Last N Hands)
-- Chips In Play (Chip Denomination)
-- VPIP / PFR Stats
-- Blind Level
 
-**HTML Source**: [statistics.html](../../docs/mockups/statistics.html)
+| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|----------|-------------|-------------|
+| **Chip Flow** | ![](../../docs/images/captions/lv-caption-41-chip-flow-3.png) | 라인 차트 + LAST 15 HANDS + 현재값 |
+| **VPIP Stats** | ![](../../docs/images/captions/lv-caption-51-vpip-2.png) | 31% 프로그레스 바 + 플레이어명 |
+| **Chip Comparison** | ![](../../docs/images/captions/lv-caption-52-chip-comparison-5.png) | 도넛 차트 (77% vs 23%) |
+
+#### C.4 Event Graphics
+
+| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|----------|-------------|-------------|
+| **Broadcast Schedule** | ![](../../docs/images/captions/lv-caption-22-broadcast-schedule-3.png) | DATE/TIME/EVENT 테이블 + 빨간 현재행 |
+| **Event Info** | ![](../../docs/images/captions/lv-caption-23-event-info-3.png) | BUY-IN/PRIZE/ENTRIES/PLACES PAID |
+| **Venue/Event** | ![](../../docs/images/captions/lv-caption-20-venue-event-3.png) | 드론샷 + 장소명 오버레이 |
+
+#### C.5 Transition & L-Bar
+
+| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|----------|-------------|-------------|
+| **Blinds Up** | ![](../../docs/images/captions/lv-caption-49-blinds-up-2.png) | LEVEL/BLINDS/DURATION 테이블 |
+| **L-Bar** | ![](../../docs/images/captions/lv-caption-58-l-bar-2.png) | BLINDS + SEATS + SCHEDULE + SCORE |
+
+---
+
+### D. Wireframe Mockups
+
+#### D.1 Full Layout
+**HTML Source**: [broadcast-layout.html](../../docs/mockups/broadcast-layout.html)
+**Preview**: [broadcast-layout-preview.png](../../docs/images/broadcast-layout-preview.png)
+
+포함 요소:
+- Mini Leaderboard (우측 상단)
+- Mini Payouts (우측 하단)
+- Chip Comparison (중앙 좌측)
+- Player Info Banner (중앙)
+- Chip Flow (중앙 우측)
+- L-Bar (하단)
+
+#### D.2 Individual Components
+- [leaderboard.html](../../docs/mockups/leaderboard.html) - Leaderboard System
+- [player-info.html](../../docs/mockups/player-info.html) - Player Info System
+- [statistics.html](../../docs/mockups/statistics.html) - Statistics
 
 
 ---
