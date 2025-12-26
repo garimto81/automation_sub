@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=540">
+    <title>Graphics Automation (automation_ae Integration)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #E31937;
+            --bg-dark: #1a1a2e;
+            --bg-card: rgba(0, 0, 0, 0.85);
+            --text-white: #FFFFFF;
+            --text-gray: #888888;
+            --ae-orange: #FF9800;
+            --web-blue: #2196F3;
+            --nas-green: #4CAF50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-white);
+            padding: 20px;
+        }
+
+        #capture-target {
+            width: 540px;
+            background: var(--bg-dark);
+            padding: 20px;
+        }
+
+        .diagram-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+            color: var(--text-white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .diagram-subtitle {
+            font-size: 12px;
+            color: var(--text-gray);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Main Container */
+        .graphics-container {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        /* Engine Row */
+        .engine-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .engine-card {
+            flex: 1;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .engine-card.ae {
+            background: rgba(255,152,0,0.1);
+            border: 1px solid var(--ae-orange);
+        }
+
+        .engine-card.web {
+            background: rgba(33,150,243,0.1);
+            border: 1px solid var(--web-blue);
+        }
+
+        .engine-card .icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .engine-card.ae .icon { color: var(--ae-orange); }
+        .engine-card.web .icon { color: var(--web-blue); }
+
+        .engine-card .name {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .engine-card .tech {
+            font-size: 10px;
+            color: var(--text-gray);
+            margin-bottom: 10px;
+        }
+
+        .engine-card .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .engine-card .feature {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Reuse Section */
+        .reuse-section {
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            font-size: 11px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .reuse-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .reuse-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .reuse-item .name {
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .reuse-item .file {
+            font-size: 8px;
+            color: var(--ae-orange);
+            font-family: monospace;
+        }
+
+        /* Event Trigger Section */
+        .trigger-section {
+            margin-bottom: 15px;
+        }
+
+        .trigger-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .trigger-table th {
+            background: var(--primary-red);
+            padding: 8px 10px;
+            font-size: 10px;
+            text-align: left;
+        }
+
+        .trigger-table th:first-child {
+            border-radius: 4px 0 0 0;
+        }
+
+        .trigger-table th:last-child {
+            border-radius: 0 4px 0 0;
+        }
+
+        .trigger-table td {
+            padding: 8px 10px;
+            font-size: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .trigger-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .trigger-table .event {
+            font-family: monospace;
+            color: var(--web-blue);
+        }
+
+        .trigger-table .action {
+            color: var(--text-white);
+        }
+
+        /* Output Section */
+        .output-section {
+            background: rgba(76,175,80,0.1);
+            border: 1px solid var(--nas-green);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .output-section .title {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--nas-green);
+            margin-bottom: 5px;
+        }
+
+        .output-section .path {
+            font-size: 10px;
+            font-family: monospace;
+            color: var(--text-gray);
+        }
+
+        .output-formats {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .format-tag {
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="capture-target">
+        <div class="diagram-title">Graphics Automation</div>
+        <div class="diagram-subtitle">automation_ae + Web Graphics Integration</div>
+
+        <div class="graphics-container">
+            <!-- Rendering Engines -->
+            <div class="engine-row">
+                <div class="engine-card ae">
+                    <div class="icon">AE</div>
+                    <div class="name">After Effects</div>
+                    <div class="tech">Nexrender / automation_ae</div>
+                    <div class="features">
+                        <span class="feature">Lower Third</span>
+                        <span class="feature">Transitions</span>
+                        <span class="feature">Animations</span>
+                    </div>
+                </div>
+                <div class="engine-card web">
+                    <div class="icon">PW</div>
+                    <div class="name">Web Graphics</div>
+                    <div class="tech">Playwright / HTML→PNG</div>
+                    <div class="features">
+                        <span class="feature">Leaderboard</span>
+                        <span class="feature">Chip Flow</span>
+                        <span class="feature">Stats</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reuse from automation_ae -->
+            <div class="reuse-section">
+                <div class="section-header">automation_ae Reuse</div>
+                <div class="reuse-grid">
+                    <div class="reuse-item">
+                        <div class="name">NAS Output</div>
+                        <div class="file">output_manager.py</div>
+                    </div>
+                    <div class="reuse-item">
+                        <div class="name">Batch Jobs</div>
+                        <div class="file">csv_parser.py</div>
+                    </div>
+                    <div class="reuse-item">
+                        <div class="name">Celery Worker</div>
+                        <div class="file">render_worker.py</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Triggers -->
+            <div class="trigger-section">
+                <div class="section-header">Event → Graphics Mapping</div>
+                <table class="trigger-table">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Graphics Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="event">blind_level_change</td>
+                            <td class="action">Blind Level 표시</td>
+                        </tr>
+                        <tr>
+                            <td class="event">player_all_in</td>
+                            <td class="action">At Risk 오버레이</td>
+                        </tr>
+                        <tr>
+                            <td class="event">big_pot_completed</td>
+                            <td class="action">Chip Flow 업데이트</td>
+                        </tr>
+                        <tr>
+                            <td class="event">day_transition</td>
+                            <td class="action">Content Strategy 전환</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- NAS Output -->
+            <div class="output-section">
+                <div class="title">NAS Auto-Save</div>
+                <div class="path">/WSOP/2026/LV/graphics/{type}/{id}/</div>
+                <div class="output-formats">
+                    <span class="format-tag">PNG Sequence</span>
+                    <span class="format-tag">MOV Alpha</span>
+                    <span class="format-tag">MP4</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

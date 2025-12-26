@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=540">
+    <title>Data Flow Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #E31937;
+            --bg-dark: #1a1a2e;
+            --bg-card: rgba(0, 0, 0, 0.85);
+            --text-white: #FFFFFF;
+            --text-gray: #888888;
+            --flow-blue: #2196F3;
+            --flow-green: #4CAF50;
+            --flow-orange: #FF9800;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-white);
+            padding: 20px;
+        }
+
+        #capture-target {
+            width: 540px;
+            background: var(--bg-dark);
+            padding: 20px;
+        }
+
+        .diagram-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+            color: var(--text-white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .diagram-subtitle {
+            font-size: 12px;
+            color: var(--text-gray);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Flow Container */
+        .flow-container {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        /* Flow Row */
+        .flow-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .flow-row:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Flow Node */
+        .flow-node {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 10px 12px;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .flow-node.source {
+            border-color: var(--flow-blue);
+            background: rgba(33,150,243,0.1);
+        }
+
+        .flow-node.process {
+            border-color: var(--flow-green);
+            background: rgba(76,175,80,0.1);
+        }
+
+        .flow-node.storage {
+            border-color: var(--flow-orange);
+            background: rgba(255,152,0,0.1);
+        }
+
+        .flow-node.output {
+            border-color: var(--primary-red);
+            background: rgba(227,25,55,0.1);
+        }
+
+        .flow-node .icon {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .flow-node .name {
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .flow-node .type {
+            font-size: 8px;
+            color: var(--text-gray);
+        }
+
+        /* Flow Arrow */
+        .flow-arrow {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+
+        .arrow-line {
+            flex: 1;
+            height: 2px;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .arrow-head {
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 8px solid rgba(255,255,255,0.5);
+        }
+
+        .arrow-bidirectional {
+            display: flex;
+            align-items: center;
+        }
+
+        .arrow-bidirectional .arrow-head-left {
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 8px solid rgba(255,255,255,0.5);
+        }
+
+        /* Section Divider */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .divider-label {
+            font-size: 10px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 9px;
+            color: var(--text-gray);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+
+        .legend-dot.source { background: var(--flow-blue); }
+        .legend-dot.process { background: var(--flow-green); }
+        .legend-dot.storage { background: var(--flow-orange); }
+        .legend-dot.output { background: var(--primary-red); }
+    </style>
+</head>
+<body>
+    <div id="capture-target">
+        <div class="diagram-title">Data Flow Diagram</div>
+        <div class="diagram-subtitle">RFID → DB → Sheets → Graphics</div>
+
+        <div class="flow-container">
+            <!-- Flow 1: RFID to DB -->
+            <div class="flow-row">
+                <div class="flow-node source">
+                    <div class="icon">RF</div>
+                    <div class="name">RFID System</div>
+                    <div class="type">Card Reader</div>
+                </div>
+                <div class="flow-arrow">
+                    <div class="arrow-line"></div>
+                    <div class="arrow-head"></div>
+                </div>
+                <div class="flow-node process">
+                    <div class="icon">PA</div>
+                    <div class="name">Parser Agent</div>
+                    <div class="type">Data Extract</div>
+                </div>
+                <div class="flow-arrow">
+                    <div class="arrow-line"></div>
+                    <div class="arrow-head"></div>
+                </div>
+                <div class="flow-node storage">
+                    <div class="icon">PG</div>
+                    <div class="name">PostgreSQL</div>
+                    <div class="type">Main DB</div>
+                </div>
+            </div>
+
+            <div class="section-divider">
+                <div class="divider-line"></div>
+                <div class="divider-label">Bi-directional Sync</div>
+                <div class="divider-line"></div>
+            </div>
+
+            <!-- Flow 2: DB to Sheets (Bidirectional) -->
+            <div class="flow-row">
+                <div class="flow-node storage">
+                    <div class="icon">PG</div>
+                    <div class="name">PostgreSQL</div>
+                    <div class="type">Main DB</div>
+                </div>
+                <div class="flow-arrow">
+                    <div class="arrow-bidirectional">
+                        <div class="arrow-head-left"></div>
+                        <div class="arrow-line"></div>
+                        <div class="arrow-head"></div>
+                    </div>
+                </div>
+                <div class="flow-node process">
+                    <div class="icon">SA</div>
+                    <div class="name">Sync Agent</div>
+                    <div class="type">Conflict Resolve</div>
+                </div>
+                <div class="flow-arrow">
+                    <div class="arrow-bidirectional">
+                        <div class="arrow-head-left"></div>
+                        <div class="arrow-line"></div>
+                        <div class="arrow-head"></div>
+                    </div>
+                </div>
+                <div class="flow-node storage">
+                    <div class="icon">GS</div>
+                    <div class="name">Google Sheets</div>
+                    <div class="type">Shared Data</div>
+                </div>
+            </div>
+
+            <div class="section-divider">
+                <div class="divider-line"></div>
+                <div class="divider-label">Graphics Output</div>
+                <div class="divider-line"></div>
+            </div>
+
+            <!-- Flow 3: DB to Graphics -->
+            <div class="flow-row">
+                <div class="flow-node storage">
+                    <div class="icon">PG</div>
+                    <div class="name">PostgreSQL</div>
+                    <div class="type">Main DB</div>
+                </div>
+                <div class="flow-arrow">
+                    <div class="arrow-line"></div>
+                    <div class="arrow-head"></div>
+                </div>
+                <div class="flow-node process">
+                    <div class="icon">WS</div>
+                    <div class="name">WebSocket</div>
+                    <div class="type">Real-time</div>
+                </div>
+                <div class="flow-arrow">
+                    <div class="arrow-line"></div>
+                    <div class="arrow-head"></div>
+                </div>
+                <div class="flow-node output">
+                    <div class="icon">GR</div>
+                    <div class="name">Graphics UI</div>
+                    <div class="type">React Frontend</div>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot source"></div>
+                    <span>Source</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot process"></div>
+                    <span>Process</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot storage"></div>
+                    <span>Storage</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot output"></div>
+                    <span>Output</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

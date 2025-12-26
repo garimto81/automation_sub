@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=540">
+    <title>PRD-0001 Integration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #E31937;
+            --bg-dark: #1a1a2e;
+            --bg-card: rgba(0, 0, 0, 0.85);
+            --text-white: #FFFFFF;
+            --text-gray: #888888;
+            --prd-0001: #2196F3;
+            --prd-0002: #E31937;
+            --shared: #4CAF50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-white);
+            padding: 20px;
+        }
+
+        #capture-target {
+            width: 540px;
+            background: var(--bg-dark);
+            padding: 20px;
+        }
+
+        .diagram-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+            color: var(--text-white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .diagram-subtitle {
+            font-size: 12px;
+            color: var(--text-gray);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Main Container */
+        .integration-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* PRD Column */
+        .prd-column {
+            flex: 1;
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .prd-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+
+        .prd-column.prd-0001 .prd-header { border-color: var(--prd-0001); }
+        .prd-column.prd-0002 .prd-header { border-color: var(--prd-0002); }
+
+        .prd-badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .prd-column.prd-0001 .prd-badge { background: var(--prd-0001); }
+        .prd-column.prd-0002 .prd-badge { background: var(--prd-0002); }
+
+        .prd-name {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Component List */
+        .component-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .component-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            padding: 8px 10px;
+            font-size: 10px;
+        }
+
+        .component-item .name {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .component-item .desc {
+            color: var(--text-gray);
+            font-size: 9px;
+        }
+
+        /* Shared Infrastructure */
+        .shared-section {
+            margin-top: 20px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(76,175,80,0.3);
+        }
+
+        .shared-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .shared-badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            background: var(--shared);
+        }
+
+        .shared-label {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .shared-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .shared-item {
+            background: rgba(76,175,80,0.1);
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .shared-item .icon {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .shared-item .name {
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .shared-item .type {
+            font-size: 8px;
+            color: var(--text-gray);
+        }
+
+        /* Dependency Arrow */
+        .dependency-section {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 6px;
+        }
+
+        .dependency-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .dependency-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .dep-from {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: var(--prd-0002);
+        }
+
+        .dep-arrow {
+            color: var(--text-gray);
+        }
+
+        .dep-to {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: var(--prd-0001);
+        }
+
+        .dep-desc {
+            flex: 1;
+            font-size: 9px;
+            color: var(--text-gray);
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="capture-target">
+        <div class="diagram-title">PRD Integration Map</div>
+        <div class="diagram-subtitle">PRD-0001 (Graphics) + PRD-0002 (Automation)</div>
+
+        <!-- PRD Columns -->
+        <div class="integration-container">
+            <!-- PRD-0001 -->
+            <div class="prd-column prd-0001">
+                <div class="prd-header">
+                    <div class="prd-badge">PRD-0001</div>
+                    <div class="prd-name">Broadcast Graphics</div>
+                </div>
+                <div class="component-list">
+                    <div class="component-item">
+                        <div class="name">Frontend (React)</div>
+                        <div class="desc">Graphics UI Components</div>
+                    </div>
+                    <div class="component-item">
+                        <div class="name">GraphicsAPI</div>
+                        <div class="desc">REST/WebSocket</div>
+                    </div>
+                    <div class="component-item">
+                        <div class="name">Control Panel</div>
+                        <div class="desc">PD Operation UI</div>
+                    </div>
+                    <div class="component-item">
+                        <div class="name">OBS Integration</div>
+                        <div class="desc">Browser Source</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRD-0002 -->
+            <div class="prd-column prd-0002">
+                <div class="prd-header">
+                    <div class="prd-badge">PRD-0002</div>
+                    <div class="prd-name">Workflow Automation</div>
+                </div>
+                <div class="component-list">
+                    <div class="component-item">
+                        <div class="name">Data Sync Agent</div>
+                        <div class="desc">RFID/Sheets Sync</div>
+                    </div>
+                    <div class="component-item">
+                        <div class="name">File Transfer Agent</div>
+                        <div class="desc">Cloud Storage</div>
+                    </div>
+                    <div class="component-item">
+                        <div class="name">Monitor Agent</div>
+                        <div class="desc">Alerts/Dashboard</div>
+                    </div>
+                    <div class="component-item">
+                        <div class="name">AI Agent</div>
+                        <div class="desc">OpenAI GPT-4o</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shared Infrastructure -->
+        <div class="shared-section">
+            <div class="shared-header">
+                <div class="shared-badge">SHARED</div>
+                <div class="shared-label">Common Infrastructure</div>
+            </div>
+            <div class="shared-grid">
+                <div class="shared-item">
+                    <div class="icon">PG</div>
+                    <div class="name">PostgreSQL</div>
+                    <div class="type">Main DB</div>
+                </div>
+                <div class="shared-item">
+                    <div class="icon">RD</div>
+                    <div class="name">Redis</div>
+                    <div class="type">Event Bus</div>
+                </div>
+                <div class="shared-item">
+                    <div class="icon">GS</div>
+                    <div class="name">Sheets</div>
+                    <div class="type">Data Sync</div>
+                </div>
+                <div class="shared-item">
+                    <div class="icon">WS</div>
+                    <div class="name">WebSocket</div>
+                    <div class="type">Real-time</div>
+                </div>
+            </div>
+
+            <!-- Dependencies -->
+            <div class="dependency-section">
+                <div class="dependency-row">
+                    <div class="dep-from">Data Sync</div>
+                    <div class="dep-arrow">→</div>
+                    <div class="dep-to">GraphicsAPI</div>
+                    <div class="dep-desc">Player/Chip Data</div>
+                </div>
+                <div class="dependency-row">
+                    <div class="dep-from">Graphics Auto</div>
+                    <div class="dep-arrow">→</div>
+                    <div class="dep-to">Control Panel</div>
+                    <div class="dep-desc">Trigger Commands</div>
+                </div>
+                <div class="dependency-row">
+                    <div class="dep-from">AI Agent</div>
+                    <div class="dep-arrow">→</div>
+                    <div class="dep-to">Frontend</div>
+                    <div class="dep-desc">Story Highlights</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

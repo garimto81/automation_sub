@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=540">
+    <title>5 Automation Domains</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #E31937;
+            --bg-dark: #1a1a2e;
+            --bg-card: rgba(0, 0, 0, 0.85);
+            --text-white: #FFFFFF;
+            --text-gray: #888888;
+            --domain-1: #E31937;
+            --domain-2: #FF9800;
+            --domain-3: #4CAF50;
+            --domain-4: #2196F3;
+            --domain-5: #9C27B0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-white);
+            padding: 20px;
+        }
+
+        #capture-target {
+            width: 540px;
+            background: var(--bg-dark);
+            padding: 20px;
+        }
+
+        .diagram-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Domain Card */
+        .domain-card {
+            background: var(--bg-card);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .domain-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            gap: 12px;
+        }
+
+        .domain-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .domain-1 .domain-number { background: var(--domain-1); }
+        .domain-2 .domain-number { background: var(--domain-2); }
+        .domain-3 .domain-number { background: var(--domain-3); }
+        .domain-4 .domain-number { background: var(--domain-4); }
+        .domain-5 .domain-number { background: var(--domain-5); }
+
+        .domain-info {
+            flex: 1;
+        }
+
+        .domain-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .domain-desc {
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+
+        .domain-priority {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .domain-priority.high { color: var(--domain-1); }
+        .domain-priority.medium { color: var(--domain-2); }
+
+        /* Domain Content */
+        .domain-content {
+            padding: 0 15px 12px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.03);
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        .flow-box {
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 10px;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            color: var(--text-gray);
+            font-size: 12px;
+        }
+
+        /* Features List */
+        .features {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .feature-tag {
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .domain-1 .feature-tag { border-color: rgba(227,25,55,0.3); }
+        .domain-2 .feature-tag { border-color: rgba(255,152,0,0.3); }
+        .domain-3 .feature-tag { border-color: rgba(76,175,80,0.3); }
+        .domain-4 .feature-tag { border-color: rgba(33,150,243,0.3); }
+        .domain-5 .feature-tag { border-color: rgba(156,39,176,0.3); }
+    </style>
+</head>
+<body>
+    <div id="capture-target">
+        <div class="diagram-title">5 Automation Domains</div>
+
+        <!-- Domain 1: Data Synchronization -->
+        <div class="domain-card domain-1">
+            <div class="domain-header">
+                <div class="domain-number">1</div>
+                <div class="domain-info">
+                    <div class="domain-name">Data Synchronization</div>
+                    <div class="domain-desc">RFID, Google Sheets Bi-directional Sync</div>
+                </div>
+                <div class="domain-priority high">P0</div>
+            </div>
+            <div class="domain-content">
+                <div class="flow-diagram">
+                    <div class="flow-box">RFID</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Parser</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">PostgreSQL</div>
+                    <div class="flow-arrow">↔</div>
+                    <div class="flow-box">Google Sheets</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">실시간 수신</span>
+                    <span class="feature-tag">양방향 동기화</span>
+                    <span class="feature-tag">충돌 해결</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Domain 2: File Transfer -->
+        <div class="domain-card domain-2">
+            <div class="domain-header">
+                <div class="domain-number">2</div>
+                <div class="domain-info">
+                    <div class="domain-name">File Transfer</div>
+                    <div class="domain-desc">Korea ↔ Venue Cloud Storage Sync</div>
+                </div>
+                <div class="domain-priority high">P0</div>
+            </div>
+            <div class="domain-content">
+                <div class="flow-diagram">
+                    <div class="flow-box">현장 (LV)</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Upload</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Cloud</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Download</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">한국</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">폴더 감시</span>
+                    <span class="feature-tag">청크 전송</span>
+                    <span class="feature-tag">체크섬 검증</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Domain 3: Monitoring -->
+        <div class="domain-card domain-3">
+            <div class="domain-header">
+                <div class="domain-number">3</div>
+                <div class="domain-info">
+                    <div class="domain-name">Monitoring</div>
+                    <div class="domain-desc">Health Check, Alerts, Dashboard</div>
+                </div>
+                <div class="domain-priority high">P0</div>
+            </div>
+            <div class="domain-content">
+                <div class="flow-diagram">
+                    <div class="flow-box">Health Check</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Anomaly Detect</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Alert</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Slack/Dashboard</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">RFID 상태</span>
+                    <span class="feature-tag">DB 연결</span>
+                    <span class="feature-tag">에스컬레이션</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Domain 4: Graphics Automation -->
+        <div class="domain-card domain-4">
+            <div class="domain-header">
+                <div class="domain-number">4</div>
+                <div class="domain-info">
+                    <div class="domain-name">Graphics Automation</div>
+                    <div class="domain-desc">automation_ae + Web Graphics Rendering</div>
+                </div>
+                <div class="domain-priority medium">P1</div>
+            </div>
+            <div class="domain-content">
+                <div class="flow-diagram">
+                    <div class="flow-box">Event</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Trigger</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">AE/Playwright</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">NAS</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">Nexrender</span>
+                    <span class="feature-tag">HTML→PNG</span>
+                    <span class="feature-tag">이벤트 트리거</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Domain 5: AI Agent -->
+        <div class="domain-card domain-5">
+            <div class="domain-header">
+                <div class="domain-number">5</div>
+                <div class="domain-info">
+                    <div class="domain-name">AI Agent</div>
+                    <div class="domain-desc">Autonomous Decision with OpenAI GPT-4o</div>
+                </div>
+                <div class="domain-priority medium">P1</div>
+            </div>
+            <div class="domain-content">
+                <div class="flow-diagram">
+                    <div class="flow-box">Context</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">GPT-4o</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Decision</div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box">Execute/Approve</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">Story Detection</span>
+                    <span class="feature-tag">Priority</span>
+                    <span class="feature-tag">Anomaly Fix</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

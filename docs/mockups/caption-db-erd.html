@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=540">
+  <title>Mockup - Caption DB ERD</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 540px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
+      font-size: 16px;
+      line-height: 1.4;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    #capture-target {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1a1a2e;
+      font-family: -apple-system, sans-serif;
+    }
+    .erd-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .table-box {
+      background: #f8f9fa;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 10px;
+    }
+    .table-header {
+      background: #343a40;
+      color: #fff;
+      padding: 6px 8px;
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .table-header.pre { background: #198754; }
+    .table-header.live { background: #0d6efd; }
+    .table-header.auto { background: #6f42c1; }
+    .table-header.mixed { background: #fd7e14; }
+    .table-body {
+      padding: 6px 8px;
+    }
+    .column {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .column:last-child {
+      border-bottom: none;
+    }
+    .col-name {
+      color: #495057;
+    }
+    .col-type {
+      color: #6c757d;
+      font-size: 9px;
+    }
+    .pk { color: #ffc107; font-weight: bold; }
+    .fk { color: #17a2b8; }
+    .relations {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #dee2e6;
+    }
+    .relation-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 8px;
+      font-family: -apple-system, sans-serif;
+    }
+    .relation-item {
+      font-size: 10px;
+      color: #6c757d;
+      padding: 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .arrow { color: #adb5bd; }
+    .legend {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #dee2e6;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: #6c757d;
+      font-family: -apple-system, sans-serif;
+    }
+    .legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+    .full-width {
+      grid-column: span 3;
+    }
+  </style>
+</head>
+<body>
+  <div id="capture-target">
+    <h1 class="title">Caption System ERD (10 Tables)</h1>
+
+    <div class="erd-container">
+      <!-- Row 1: Core Tables -->
+      <div class="table-box">
+        <div class="table-header pre">events</div>
+        <div class="table-body">
+          <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">name</span><span class="col-type">VARCHAR</span></div>
+          <div class="column"><span class="col-name">venue_id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">start_date</span><span class="col-type">DATE</span></div>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <div class="table-header mixed">tournaments</div>
+        <div class="table-body">
+          <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name fk">event_id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">buy_in</span><span class="col-type">DECIMAL</span></div>
+          <div class="column"><span class="col-name">current_level</span><span class="col-type">INT</span></div>
+          <div class="column"><span class="col-name">remaining</span><span class="col-type">INT</span></div>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <div class="table-header pre">blind_levels</div>
+        <div class="table-body">
+          <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name fk">tournament_id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">level</span><span class="col-type">INT</span></div>
+          <div class="column"><span class="col-name">sb/bb/ante</span><span class="col-type">INT</span></div>
+        </div>
+      </div>
+
+      <!-- Row 2: Player Tables -->
+      <div class="table-box">
+        <div class="table-header live">players</div>
+        <div class="table-body">
+          <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name fk">tournament_id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">name</span><span class="col-type">VARCHAR</span></div>
+          <div class="column"><span class="col-name">chips</span><span class="col-type">INT</span></div>
+          <div class="column"><span class="col-name">seat/table</span><span class="col-type">INT</span></div>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <div class="table-header pre">player_profiles</div>
+        <div class="table-body">
+          <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name fk">player_id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">bracelets</span><span class="col-type">INT</span></div>
+          <div class="column"><span class="col-name">earnings</span><span class="col-type">DECIMAL</span></div>
+          <div class="column"><span class="col-name">biography</span><span class="col-type">TEXT</span></div>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <div class="table-header auto">player_stats</div>
+        <div class="table-body">
+          <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name fk">player_id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">vpip</span><span class="col-type">DECIMAL</span></div>
+          <div class="column"><span class="col-name">pfr</span><span class="col-type">DECIMAL</span></div>
+          <div class="column"><span class="col-name">hands</span><span class="col-type">INT</span></div>
+        </div>
+      </div>
+
+      <!-- Row 3: Action Tables -->
+      <div class="table-box">
+        <div class="table-header live">chip_history</div>
+        <div class="table-body">
+          <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name fk">player_id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">hand_num</span><span class="col-type">INT</span></div>
+          <div class="column"><span class="col-name">chips</span><span class="col-type">INT</span></div>
+          <div class="column"><span class="col-name">timestamp</span><span class="col-type">TS</span></div>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <div class="table-header live">hand_actions</div>
+        <div class="table-body">
+          <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name fk">player_id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">hand_num</span><span class="col-type">INT</span></div>
+          <div class="column"><span class="col-name">action</span><span class="col-type">VARCHAR</span></div>
+          <div class="column"><span class="col-name">hole_cards</span><span class="col-type">CHAR(4)</span></div>
+        </div>
+      </div>
+
+      <div class="table-box">
+        <div class="table-header pre">payouts</div>
+        <div class="table-body">
+          <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name fk">tournament_id</span><span class="col-type">UUID</span></div>
+          <div class="column"><span class="col-name">place</span><span class="col-type">INT</span></div>
+          <div class="column"><span class="col-name">amount</span><span class="col-type">DECIMAL</span></div>
+        </div>
+      </div>
+
+      <!-- Row 4: Queue Table (Full Width) -->
+      <div class="table-box full-width">
+        <div class="table-header mixed">graphics_queue (PRD-0002 Integration)</div>
+        <div class="table-body" style="display:flex;gap:20px;">
+          <div style="flex:1;">
+            <div class="column"><span class="col-name pk">id</span><span class="col-type">UUID</span></div>
+            <div class="column"><span class="col-name fk">tournament_id</span><span class="col-type">UUID</span></div>
+          </div>
+          <div style="flex:1;">
+            <div class="column"><span class="col-name">graphic_type</span><span class="col-type">VARCHAR</span></div>
+            <div class="column"><span class="col-name">trigger_event</span><span class="col-type">VARCHAR</span></div>
+          </div>
+          <div style="flex:1;">
+            <div class="column"><span class="col-name">payload</span><span class="col-type">JSONB</span></div>
+            <div class="column"><span class="col-name">status</span><span class="col-type">VARCHAR</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Relations -->
+    <div class="relations">
+      <div class="relation-title">Key Relationships</div>
+      <div class="relation-item">
+        <span>events</span>
+        <span class="arrow">1:N</span>
+        <span>tournaments</span>
+        <span class="arrow">1:N</span>
+        <span>players</span>
+        <span class="arrow">1:N</span>
+        <span>chip_history</span>
+      </div>
+      <div class="relation-item">
+        <span>players</span>
+        <span class="arrow">1:1</span>
+        <span>player_profiles</span>
+        <span style="color:#adb5bd;">|</span>
+        <span>players</span>
+        <span class="arrow">1:1</span>
+        <span>player_stats</span>
+      </div>
+      <div class="relation-item">
+        <span>tournaments</span>
+        <span class="arrow">1:N</span>
+        <span>blind_levels</span>
+        <span style="color:#adb5bd;">|</span>
+        <span>tournaments</span>
+        <span class="arrow">1:N</span>
+        <span>payouts</span>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color" style="background:#198754;"></div>
+        Pre (Prepared)
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background:#0d6efd;"></div>
+        Live (Real-time)
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background:#6f42c1;"></div>
+        Auto (Generated)
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background:#fd7e14;"></div>
+        Mixed
+      </div>
+    </div>
+  </div>
+</body>
+</html>
