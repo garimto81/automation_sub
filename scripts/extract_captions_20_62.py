@@ -140,6 +140,11 @@ def main():
 
             final_path = OUTPUT_DIR / f"{filename}.png"
 
+            # 이미 존재하는 파일 스킵
+            if final_path.exists():
+                print(f"  [{slide_num}] EXISTS: {final_path.name}")
+                continue
+
             # 이미지 다운로드
             try:
                 response = requests.get(content_url, timeout=30)
