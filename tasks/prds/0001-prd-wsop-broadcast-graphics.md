@@ -1,13 +1,14 @@
 # PRD: WSOP Broadcast Graphics System
 
 **PRD Number**: PRD-0001
-**Version**: 2.1
-**Date**: 2025-12-24
+**Version**: 2.2
+**Date**: 2025-12-25
 **Status**: Draft
 
 ### Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.2 | 2025-12-25 | 슬라이드 재추출 및 이미지 경로 업데이트 (57개 신규 이미지 추가, Appendix C 확장) |
 | 2.1 | 2025-12-24 | 자막 디자인 분석 결과 반영 (색상 팔레트, 타이포그래피, 애니메이션 가이드, 디자인 이미지 참조) |
 | 2.0 | 2025-12-23 | Initial PRD |
 
@@ -94,6 +95,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 #### 4.1.2 Feature Table Leaderboard
 
 ![Feature Table Leaderboard](../../docs/images/captions/lv-caption-31-main_leaderboard-3.png)
+![Feature Table Leaderboard - Slide](../../docs/images/slides/sc-opening-day-1-15.png)
 
 - **2 Tables 버전**: 이름/국적/칩/BB/Percentage
 - **1 Table 버전**: 단일 테이블 상세 뷰
@@ -117,6 +119,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 #### 4.1.5 Mini Payouts ⭐ NEW
 
 ![Mini Payouts](../../docs/images/captions/lv-caption-36-mini_payouts-3.png)
+![Mini Payouts - Slide](../../docs/images/slides/lv-opening-26.png)
 
 - 플레이어 좌측/우측 공간 활용
 - **일반형**: 현재 상금 구조
@@ -139,6 +142,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 #### 4.2.2 Chip Flow
 
 ![Chip Flow](../../docs/images/captions/lv-caption-41-chip-flow-3.png)
+![Chip Flow - Slide](../../docs/images/slides/lv-graphic(special)-2.png)
 
 > "토너먼트 레귤러 입장에서 가장 참고할 가치가 높은 정보"
 
@@ -150,7 +154,8 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 
 #### 4.2.3 Chips In Play (Chip Denomination) ⭐ NEW
 
-![Chips In Play](../../docs/images/captions/lv-caption-42-chips-in-play-3.png)
+![Chips In Play](../../docs/images/captions/lv-caption-43-chips-in-play-3.png)
+![Chips In Play - Slide](../../docs/images/slides/lv-opening-48.png)
 
 - 칩스택 좌측/우측 공간
 - **표시 타이밍**: 게임 시작 / Break 후 3핸드 이내
@@ -180,7 +185,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 
 #### 4.3.2 Player Intro Card
 
-![Player Intro Card](../../docs/images/captions/lv-caption-56-player-intro-card-2.png)
+![Player Intro Card](../../docs/images/captions/lv-caption-58-player-intro-card-2.png)
 
 - 플레이어 입장/소개 시 사용
 - 이름, 국적, 주요 성적
@@ -693,14 +698,17 @@ HEAD OF PRODUCTION
 | **Commentator Profile** | ![](../../docs/images/captions/lv-caption-21-commentator-profile-3.png) | 2인 프로필 + COMMENTATOR 라벨 |
 | **Heads-Up Frame** | ![](../../docs/images/captions/lv-caption-53-heads-up-4.png) | 골드 원형 프레임 + 월계관 + 별 |
 | **Heads-Up VS** | ![](../../docs/images/captions/lv-caption-54-heads-up-2.png) | VS 레이아웃 + 노란/파란 배경 |
+| **Player Intro Card** | ![](../../docs/images/captions/lv-caption-58-player-intro-card-2.png) | 플레이어 소개 카드 + 사진 + 성적 |
 
 #### C.3 Statistics
 
 | 자막 요소 | 디자인 이미지 | 주요 구성요소 |
 |----------|-------------|-------------|
 | **Chip Flow** | ![](../../docs/images/captions/lv-caption-41-chip-flow-3.png) | 라인 차트 + LAST 15 HANDS + 현재값 |
+| **Chips In Play** | ![](../../docs/images/captions/lv-caption-43-chips-in-play-3.png) | 칩 색상별 수량 표시 |
 | **VPIP Stats** | ![](../../docs/images/captions/lv-caption-51-vpip-2.png) | 31% 프로그레스 바 + 플레이어명 |
 | **Chip Comparison** | ![](../../docs/images/captions/lv-caption-52-chip-comparison-5.png) | 도넛 차트 (77% vs 23%) |
+| **Chip Stack Bar** | ![](../../docs/images/captions/lv-caption-57-chip-stack-bar-2.png) | 스택 비교 바 차트 |
 
 #### C.4 Event Graphics
 
@@ -715,7 +723,9 @@ HEAD OF PRODUCTION
 | 자막 요소 | 디자인 이미지 | 주요 구성요소 |
 |----------|-------------|-------------|
 | **Blinds Up** | ![](../../docs/images/captions/lv-caption-49-blinds-up-2.png) | LEVEL/BLINDS/DURATION 테이블 |
-| **L-Bar** | ![](../../docs/images/captions/lv-caption-58-l-bar-2.png) | BLINDS + SEATS + SCHEDULE + SCORE |
+| **Transition** | ![](../../docs/images/captions/lv-caption-60-transition.png) | 장면 전환 그래픽 |
+| **L-Bar** | ![](../../docs/images/captions/lv-caption-61-l-bar-2.png) | BLINDS + SEATS + SCHEDULE + SCORE |
+| **L-Bar (Regi Close 이전)** | ![](../../docs/images/captions/lv-caption-62-l-bar-regi-close-이전-3.png) | 등록 마감 전 L-Bar |
 
 ---
 
