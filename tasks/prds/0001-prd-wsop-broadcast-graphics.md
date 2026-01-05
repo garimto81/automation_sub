@@ -1,13 +1,15 @@
 # PRD: WSOP Broadcast Graphics System
 
 **PRD Number**: PRD-0001
-**Version**: 2.3
+**Version**: 2.5
 **Date**: 2026-01-05
 **Status**: Draft
 
 ### Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.5 | 2026-01-05 | Appendix C 자막 디자인 리스트 재분석 (26개 자막 유형, 슬라이드 번호 매핑, Mini Payouts 용도 수정, Player Achievement/Level Table LB 추가) |
+| 2.4 | 2026-01-05 | OBS Browser Source → Korea Production 방송 시스템 변경, Section 5.3 연동 아키텍처 재설계, 리스크 항목 업데이트 |
 | 2.3 | 2026-01-05 | slides 이미지 링크 수정, Section 3.5 Caption Data Workflow 추가 |
 | 2.2 | 2025-12-25 | 슬라이드 재추출 및 이미지 경로 업데이트 (57개 신규 이미지 추가, Appendix C 확장) |
 | 2.1 | 2025-12-24 | 자막 디자인 분석 결과 반영 (색상 팔레트, 타이포그래피, 애니메이션 가이드, 디자인 이미지 참조) |
@@ -28,13 +30,13 @@ WSOP 포커 토너먼트의 YouTube Live 방송을 위한 **실시간 그래픽 
 ### 1.1 Goals
 - 실시간 토너먼트 데이터를 방송 그래픽으로 변환
 - ViewPoint 제공 중심의 정보 전달 (단순 나열 X)
-- OBS/vMix 연동 가능한 웹 기반 그래픽 출력
+- **Korea Production 방송 시스템** 연동 가능한 웹 기반 그래픽 출력
 - **AI 활용 자동화** (모니터링, 파일 전송, 시트 공유)
 - **Virtual Table + Soft Contents 통합**
 
 ### 1.2 Non-Goals
 - 영상 편집/인코딩 시스템
-- 방송 송출 시스템 (OBS/vMix 사용)
+- 방송 송출 시스템 (Korea Production에서 담당)
 - 가상 테이블 3D 렌더링 (별도 프로젝트)
 
 ---
@@ -82,7 +84,7 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 
 ```
 [RFID System] ──┐
-[WSOP+ CSV]   ──┼──▶ PostgreSQL ──▶ 자막 생성 ──▶ OBS Browser Source
+[WSOP+ CSV]   ──┼──▶ PostgreSQL ──▶ 자막 생성 ──▶ Korea Production 방송 시스템
 [수기 입력]    ──┘        ↕
                     Google Sheets
 ```
@@ -335,21 +337,75 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 | AI/Automation | Python + OpenAI | 모니터링 자동화 |
 | Sheet Sync | Google Sheets API | 파트별 시트 공유 |
 
-### 5.3 OBS Integration
+### 5.3 Korea Production 방송 시스템 연동
+
+> Korea Production 방송 시스템과의 실시간 그래픽 연동
+
+#### 연동 아키텍처
 
 ```
-Browser Source URL:
-http://localhost:3000/graphics/{graphic_type}
+┌─────────────────────────────────────────────────────────────────┐
+│                   Korea Production 방송 시스템                    │
+│  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐    │
+│  │ 영상 Switcher │     │ 그래픽 믹서  │     │ 송출 서버    │    │
+│  └──────────────┘     └──────────────┘     └──────────────┘    │
+│           │                   │                   │             │
+│           └───────────┬───────┴───────────────────┘             │
+│                       ▼                                         │
+│              ┌──────────────┐                                   │
+│              │ 그래픽 입력  │◀────── Web Overlay (NDI/SDI)      │
+│              └──────────────┘                                   │
+└─────────────────────────────────────────────────────────────────┘
+                        ▲
+                        │ WebSocket / HTTP
+                        │
+┌─────────────────────────────────────────────────────────────────┐
+│                    Graphics Server (본 시스템)                   │
+│                  http://localhost:3000/graphics/*               │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-Examples:
-- /graphics/leaderboard-tournament
-- /graphics/leaderboard-feature?tables=2
-- /graphics/chip-comparison
-- /graphics/chip-flow
-- /graphics/player-profile/{playerId}
-- /graphics/at-risk/{playerId}
-- /graphics/blind-level
-- /graphics/transition/{type}
+#### 그래픽 출력 URL
+
+```
+Base URL: http://localhost:3000/graphics/{graphic_type}
+
+Endpoints:
+- /graphics/leaderboard-tournament     # Tournament Leaderboard
+- /graphics/leaderboard-feature?tables=2  # Feature Table LB
+- /graphics/chip-comparison            # Chip Comparison
+- /graphics/chip-flow                  # Chip Flow Chart
+- /graphics/player-profile/{playerId}  # Player Profile
+- /graphics/at-risk/{playerId}         # At Risk Overlay
+- /graphics/blind-level                # Blind Level
+- /graphics/transition/{type}          # Transition Graphics
+```
+
+#### 연동 방식
+
+| 방식 | 설명 | 용도 |
+|------|------|------|
+| **Web Overlay** | 웹 페이지를 그래픽 레이어로 캡처 | 실시간 자막/오버레이 |
+| **NDI Output** | 네트워크 기반 영상 전송 | 고품질 그래픽 믹싱 |
+| **WebSocket API** | 양방향 실시간 통신 | 그래픽 제어/트리거 |
+| **REST API** | HTTP 기반 제어 | 상태 조회/설정 변경 |
+
+#### 제어 API
+
+```typescript
+// 그래픽 표시/숨김
+POST /api/graphics/show    { type: 'leaderboard', params: {...} }
+POST /api/graphics/hide    { type: 'leaderboard' }
+
+// 상태 조회
+GET  /api/graphics/status  // 현재 활성 그래픽 목록
+
+// WebSocket 이벤트 (Korea Production → Graphics Server)
+ws://localhost:3000/ws/control
+  - graphic:show
+  - graphic:hide
+  - graphic:update
+  - transition:trigger
 ```
 
 ---
@@ -567,7 +623,7 @@ interface HandPlayer {
 - [ ] 프로젝트 세팅 (React + FastAPI)
 - [ ] 데이터베이스 스키마 설계
 - [ ] WebSocket 실시간 통신 구현
-- [ ] OBS Browser Source 기본 연동
+- [ ] Korea Production 방송 시스템 연동 (Web Overlay/NDI)
 - [ ] Google Sheets API 연동 (자동화)
 
 ### Phase 2: Leaderboard System
@@ -628,7 +684,8 @@ interface HandPlayer {
 |------|--------|------------|
 | 실시간 데이터 지연 | High | 로컬 캐싱, 낙관적 업데이트 |
 | RFID 데이터 누락 | High | 수동 입력 폴백, 알림 시스템 |
-| OBS 호환성 이슈 | Medium | Chromium 기반 테스트, 폴백 지원 |
+| Korea Production 연동 이슈 | Medium | NDI/Web Overlay 이중화, 현장 테스트 필수 |
+| 네트워크 지연 (한국↔현장) | Medium | 현지 서버 배포, CDN 활용 |
 | 복잡한 애니메이션 성능 | Medium | GPU 가속, will-change 최적화 |
 | 다양한 해상도 대응 | Low | 반응형 + 고정 크기 옵션 |
 
@@ -697,57 +754,69 @@ HEAD OF PRODUCTION
 
 ### C. Design Image References
 
-> 슬라이드 20-62에서 추출된 자막 디자인 이미지 참조
-
-#### C.1 Leaderboard System
-
-| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
-|----------|-------------|-------------|
-| **Tournament Leaderboard** | ![](../../docs/images/captions/lv-caption-26-tournament-leaderboard(s)-3.png) | 타이틀 + 빨간 헤더 + 10행 순위 |
-| **Feature Table LB** | ![](../../docs/images/captions/lv-caption-31-main_leaderboard-3.png) | LEADERBOARD TABLE 1 + BLINDS |
-| **Mini Leaderboard** | ![](../../docs/images/captions/lv-caption-33-mini_leaderboard-3.png) | 10행 + 순위변동(▲▼) + AVG STACK |
-| **Payouts** | ![](../../docs/images/captions/lv-caption-24-main_payouts-3.png) | 1-9위 상금 + TOTAL PRIZE |
-| **Mini Payouts** | ![](../../docs/images/captions/lv-caption-36-mini_payouts-3.png) | FINAL TABLE + 상금 리스트 |
+> 슬라이드 20-62에서 추출된 자막 디자인 이미지 참조 (총 26개 자막 유형, 241개 이미지)
 
 **디자인 이미지 경로**: `docs/images/captions/lv-caption-*.png`
 
-#### C.2 Player Info System
+#### C.1 Event Graphics (대회 정보) - 슬라이드 20-24
 
-| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
-|----------|-------------|-------------|
-| **Player Profile** | ![](../../docs/images/captions/lv-caption-37-player-profile-elimination-3.png) | 빨간 배너 + 국기 + 이름 + CURRENT STACK |
-| **At Risk of Elimination** | ![](../../docs/images/captions/lv-caption-50-at-risk-of-elimination-2.png) | 빨간 배너 + 순위 + Payout ($23,400) |
-| **Commentator Profile** | ![](../../docs/images/captions/lv-caption-21-commentator-profile-3.png) | 2인 프로필 + COMMENTATOR 라벨 |
-| **Heads-Up Frame** | ![](../../docs/images/captions/lv-caption-53-heads-up-4.png) | 골드 원형 프레임 + 월계관 + 별 |
-| **Heads-Up VS** | ![](../../docs/images/captions/lv-caption-54-heads-up-2.png) | VS 레이아웃 + 노란/파란 배경 |
-| **Player Intro Card** | ![](../../docs/images/captions/lv-caption-58-player-intro-card-2.png) | 플레이어 소개 카드 + 사진 + 성적 |
+| 슬라이드 | 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|---------|----------|-------------|-------------|
+| 20 | **Venue/Event** | ![](../../docs/images/captions/lv-caption-20-venue-event-3.png) | 드론샷 배경 + 장소명 오버레이 |
+| 21 | **Commentator Profile** | ![](../../docs/images/captions/lv-caption-21-commentator-profile-3.png) | 2인 프로필 + COMMENTATOR 라벨 |
+| 22 | **Broadcast Schedule** | ![](../../docs/images/captions/lv-caption-22-broadcast-schedule-3.png) | DATE/TIME/EVENT 테이블 + 빨간 현재행 |
+| 23 | **Event Info** | ![](../../docs/images/captions/lv-caption-23-event-info-3.png) | BUY-IN/PRIZE/ENTRIES/PLACES PAID |
+| 24 | **Main Payouts** | ![](../../docs/images/captions/lv-caption-24-main_payouts-3.png) | 1-9위 상금 + TOTAL PRIZE |
 
-#### C.3 Statistics
+#### C.2 Leaderboard System (순위표) - 슬라이드 26-36
 
-| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
-|----------|-------------|-------------|
-| **Chip Flow** | ![](../../docs/images/captions/lv-caption-41-chip-flow-3.png) | 라인 차트 + LAST 15 HANDS + 현재값 |
-| **Chips In Play** | ![](../../docs/images/captions/lv-caption-43-chips-in-play-3.png) | 칩 색상별 수량 표시 |
-| **VPIP Stats** | ![](../../docs/images/captions/lv-caption-51-vpip-2.png) | 31% 프로그레스 바 + 플레이어명 |
-| **Chip Comparison** | ![](../../docs/images/captions/lv-caption-52-chip-comparison-5.png) | 도넛 차트 (77% vs 23%) |
-| **Chip Stack Bar** | ![](../../docs/images/captions/lv-caption-57-chip-stack-bar-2.png) | 스택 비교 바 차트 |
+| 슬라이드 | 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|---------|----------|-------------|-------------|
+| 26-30 | **Tournament Leaderboard** | ![](../../docs/images/captions/lv-caption-26-tournament-leaderboard(s)-3.png) | 타이틀 + 빨간 헤더 + 10행 순위 |
+| 31 | **Feature Table LB** | ![](../../docs/images/captions/lv-caption-31-main_leaderboard-3.png) | LEADERBOARD TABLE 1 + BLINDS |
+| 32 | **Payouts (Compact)** | ![](../../docs/images/captions/lv-caption-32-payouts-3.png) | 상금 구조표 (간소화) |
+| 33 | **Mini Leaderboard** | ![](../../docs/images/captions/lv-caption-33-mini_leaderboard-3.png) | 10행 + 순위변동(▲▼) + AVG STACK |
+| 34 | **Mini LB (Motion)** | ![](../../docs/images/captions/lv-caption-34-mini_leaderboard-모션-참고-3.png) | 미니 리더보드 모션 참고 |
+| 35 | **Level Table LB** | ![](../../docs/images/captions/lv-caption-35-mini_leaderboard-3.png) | LEVEL + TABLE NO + 순위표 |
+| 36 | **Mini Payouts** | ![](../../docs/images/captions/lv-caption-36-mini_payouts-3.png) | 현재 남은 참가자 대비 상금 구조표 |
 
-#### C.4 Event Graphics
+#### C.3 Player Info System (플레이어 정보) - 슬라이드 37-38, 50, 53-54, 56, 58
 
-| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
-|----------|-------------|-------------|
-| **Broadcast Schedule** | ![](../../docs/images/captions/lv-caption-22-broadcast-schedule-3.png) | DATE/TIME/EVENT 테이블 + 빨간 현재행 |
-| **Event Info** | ![](../../docs/images/captions/lv-caption-23-event-info-3.png) | BUY-IN/PRIZE/ENTRIES/PLACES PAID |
-| **Venue/Event** | ![](../../docs/images/captions/lv-caption-20-venue-event-3.png) | 드론샷 + 장소명 오버레이 |
+| 슬라이드 | 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|---------|----------|-------------|-------------|
+| 37 | **Player Profile** | ![](../../docs/images/captions/lv-caption-37-player-profile-elimination-3.png) | 빨간 배너 + 국기 + 이름 + CURRENT STACK |
+| 38 | **Player Achievement** | ![](../../docs/images/captions/lv-caption-38-player-profile-elimination-3.png) | 플레이어 성적 하이라이트 (예: "2-TIME BRACELET WINNER") |
+| 50 | **At Risk of Elimination** | ![](../../docs/images/captions/lv-caption-50-at-risk-of-elimination-2.png) | 빨간 배너 + 순위 + Payout ($23,400) |
+| 53 | **Heads-Up Frame** | ![](../../docs/images/captions/lv-caption-53-heads-up-4.png) | 골드 원형 프레임 + 월계관 + 별 |
+| 54 | **Heads-Up VS** | ![](../../docs/images/captions/lv-caption-54-heads-up-2.png) | VS 레이아웃 + Stack/Bracelets/Earnings 비교 |
+| 56,58 | **Player Intro Card** | ![](../../docs/images/captions/lv-caption-58-player-intro-card-2.png) | 플레이어 소개 카드 + 사진 + 성적 |
 
-#### C.5 Transition & L-Bar
+#### C.4 Statistics (통계) - 슬라이드 41-43, 51-52, 55-57
 
-| 자막 요소 | 디자인 이미지 | 주요 구성요소 |
-|----------|-------------|-------------|
-| **Blinds Up** | ![](../../docs/images/captions/lv-caption-49-blinds-up-2.png) | LEVEL/BLINDS/DURATION 테이블 |
-| **Transition** | ![](../../docs/images/captions/lv-caption-60-transition.png) | 장면 전환 그래픽 |
-| **L-Bar** | ![](../../docs/images/captions/lv-caption-61-l-bar-2.png) | BLINDS + SEATS + SCHEDULE + SCORE |
-| **L-Bar (Regi Close 이전)** | ![](../../docs/images/captions/lv-caption-62-l-bar-regi-close-이전-3.png) | 등록 마감 전 L-Bar |
+| 슬라이드 | 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|---------|----------|-------------|-------------|
+| 41 | **Chip Flow** | ![](../../docs/images/captions/lv-caption-41-chip-flow-3.png) | 라인 차트 + LAST N HANDS + 현재값 마커 |
+| 42-43 | **Chips In Play** | ![](../../docs/images/captions/lv-caption-43-chips-in-play-3.png) | 칩 색상별 수량 표시 |
+| 51 | **VPIP Stats** | ![](../../docs/images/captions/lv-caption-51-vpip-2.png) | VPIP % 프로그레스 바 + 플레이어명 |
+| 52 | **Chip Comparison** | ![](../../docs/images/captions/lv-caption-52-chip-comparison-5.png) | 도넛 차트 (% 비교) |
+| 55-57 | **Chip Stack Bar** | ![](../../docs/images/captions/lv-caption-57-chip-stack-bar-2.png) | 스택 비교 바 차트 |
+
+#### C.5 Transition & L-Bar (전환 및 하단 바) - 슬라이드 49, 57, 58-62
+
+| 슬라이드 | 자막 요소 | 디자인 이미지 | 주요 구성요소 |
+|---------|----------|-------------|-------------|
+| 49 | **Blinds Up** | ![](../../docs/images/captions/lv-caption-49-blinds-up-2.png) | LEVEL/BLINDS/DURATION 테이블 |
+| 57,60 | **Transition** | ![](../../docs/images/captions/lv-caption-60-transition.png) | 장면 전환 그래픽 (WSOP 칩 로고) |
+| 58-62 | **L-Bar** | ![](../../docs/images/captions/lv-caption-61-l-bar-2.png) | BLINDS + SEATS + SCHEDULE + SCORE (참고: ESPN 스타일) |
+| 59 | **L-Bar (Regi Close 이전)** | ![](../../docs/images/captions/lv-caption-62-l-bar-regi-close-이전-3.png) | 등록 마감 전 L-Bar |
+
+#### C.6 Special Graphics (특수/참고용) - 슬라이드 25, 39-40, 43-48
+
+| 슬라이드 | 자막 요소 | 용도 |
+|---------|----------|------|
+| 25, 39, 40 | **In-Game / Graphics (Special)** | WSOP 칩 로고 (전환용) |
+| 43-44 | **Purpose** | 참고용 레퍼런스 이미지 (축구 라인업 등) |
+| 45-48 | **Graphic (Special)** | 특수 그래픽 / Soft Contents Player 소개용 |
 
 ---
 

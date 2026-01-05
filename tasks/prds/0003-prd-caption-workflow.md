@@ -1,7 +1,7 @@
 # PRD: Caption Generation Workflow System
 
 **PRD Number**: PRD-0003
-**Version**: 1.2
+**Version**: 1.3
 **Date**: 2025-12-25
 **Status**: Draft
 **Parent PRD**: PRD-0001 (WSOP Broadcast Graphics System), PRD-0002 (Workflow Automation System)
@@ -9,6 +9,7 @@
 ### Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.3 | 2026-01-05 | OBS/vMix → Korea Production 방송 시스템 변경 (Non-Goals, 데이터 흐름도) |
 | 1.2 | 2025-12-26 | 섹션 3.1.1 개선 - 상호 배타적 데이터 소스 분류 체계 (중복/충돌 없음), 테이블별 소스 매핑 추가 |
 | 1.1 | 2025-12-25 | 섹션 3.1.1 추가 - 데이터 수집 형태 3가지 (pokerGFX JSON, WSOP+ CSV, 수기 입력) 정의 |
 | 1.0 | 2025-12-25 | Initial PRD - 26개 자막 유형별 정보 수집 체계화, DB 스키마 10개 테이블, 워크플로우 파이프라인 정의 |
@@ -43,7 +44,7 @@ PRD-0001에서 정의된 **26개 자막 유형**의 정보 수집 방식을 체�
 
 - 자막 디자인/애니메이션 (PRD-0001 담당)
 - 자동화 인프라 구축 (PRD-0002 담당)
-- 방송 송출 시스템 (OBS/vMix 수동 조작)
+- 방송 송출 시스템 (Korea Production에서 담당)
 
 ---
 
@@ -1024,7 +1025,7 @@ PRD-0003 (Caption Workflow)
     └──── PRD-0001 (Graphics)
           ├── 26개 자막 컴포넌트
           ├── Control Panel
-          ├── OBS Integration
+          ├── Korea Production Integration
           └── Animation System
 ```
 
@@ -1060,7 +1061,7 @@ PRD-0003: GraphicsTriggerAgent
 PRD-0001: Graphics Frontend (React)
                    │
                    ▼
-           OBS Browser Source
+           Korea Production 방송 시스템
 ```
 
 ---

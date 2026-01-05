@@ -1,7 +1,7 @@
 # PRD: Workflow Automation System
 
 **PRD Number**: PRD-0002
-**Version**: 1.0
+**Version**: 1.1
 **Date**: 2025-12-25
 **Status**: Draft
 **Parent PRD**: PRD-0001 (WSOP Broadcast Graphics System)
@@ -9,6 +9,7 @@
 ### Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.1 | 2026-01-05 | OBS/vMix → Korea Production 방송 시스템 변경 |
 | 1.0 | 2025-12-25 | Initial PRD - 5대 자동화 영역 정의, AI Agent 아키텍처, automation_ae 통합 |
 
 ### Source Documents
@@ -44,7 +45,7 @@ PRD-0001 (WSOP Broadcast Graphics System)의 **Phase 6: AI Automation** 요구�
 ### 1.3 Non-Goals
 
 - 그래픽 디자인 제작 (PRD-0001 담당)
-- 방송 송출 시스템 운영 (OBS/vMix 수동 조작)
+- 방송 송출 시스템 운영 (Korea Production에서 담당)
 - 3D 렌더링/Virtual Table (별도 프로젝트)
 
 ---
