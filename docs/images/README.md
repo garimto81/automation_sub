@@ -18,6 +18,16 @@
 | [integration.png](integration.png) | [HTML](../mockups/integration.html) | 시스템 통합 |
 | [workflow-architecture.png](workflow-architecture.png) | [HTML](../mockups/workflow-architecture.html) | 워크플로우 아키텍처 |
 
+## UI 컴포넌트 목업
+
+| 이미지 | HTML 소스 | 설명 |
+|--------|-----------|------|
+| [broadcast-layout-preview.png](broadcast-layout-preview.png) | [HTML](../mockups/broadcast-layout.html) | 방송 레이아웃 미리보기 |
+| [control-panel.png](control-panel.png) | [HTML](../mockups/control-panel.html) | Control Panel UI |
+| [leaderboard.png](leaderboard.png) | [HTML](../mockups/leaderboard.html) | Leaderboard 컴포넌트 |
+| [player-info.png](player-info.png) | [HTML](../mockups/player-info.html) | Player Info 컴포넌트 |
+| [statistics.png](statistics.png) | [HTML](../mockups/statistics.html) | Statistics 컴포넌트 |
+
 ## 자막 이미지
 
 `captions/` 폴더에는 Google Slides에서 추출한 자막 요소 이미지가 있습니다.
