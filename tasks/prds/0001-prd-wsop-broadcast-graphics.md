@@ -1,13 +1,14 @@
 # PRD: WSOP Broadcast Graphics System
 
 **PRD Number**: PRD-0001
-**Version**: 2.2
-**Date**: 2025-12-25
+**Version**: 2.3
+**Date**: 2026-01-05
 **Status**: Draft
 
 ### Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.3 | 2026-01-05 | slides 이미지 링크 수정, Section 3.5 Caption Data Workflow 추가 |
 | 2.2 | 2025-12-25 | 슬라이드 재추출 및 이미지 경로 업데이트 (57개 신규 이미지 추가, Appendix C 확장) |
 | 2.1 | 2025-12-24 | 자막 디자인 분석 결과 반영 (색상 팔레트, 타이포그래피, 애니메이션 가이드, 디자인 이미지 참조) |
 | 2.0 | 2025-12-23 | Initial PRD |
@@ -73,6 +74,31 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 
 ---
 
+## 3.5 Caption Data Workflow
+
+![Caption Data Flow](../../docs/images/caption-data-flow.png)
+
+### 데이터 흐름
+
+```
+[RFID System] ──┐
+[WSOP+ CSV]   ──┼──▶ PostgreSQL ──▶ 자막 생성 ──▶ OBS Browser Source
+[수기 입력]    ──┘        ↕
+                    Google Sheets
+```
+
+### 데이터 소스 (상호 배타적)
+
+| 소스 | 범위 | 데이터 유형 |
+|------|------|------------|
+| **pokerGFX JSON** | Feature Table 전용 | RFID 핸드/카드 데이터 |
+| **WSOP+ CSV** | Other Tables | 대회 정보, 플레이어 순위 |
+| **수기 입력** | 모든 테이블 | 프로필, 좌석, 코멘테이터 |
+
+> 상세: [PRD-0003 Caption Workflow](./0003-prd-caption-workflow.md)
+
+---
+
 ## 4. Core Features
 
 ### 4.1 Leaderboard System
@@ -95,7 +121,6 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 #### 4.1.2 Feature Table Leaderboard
 
 ![Feature Table Leaderboard](../../docs/images/captions/lv-caption-31-main_leaderboard-3.png)
-![Feature Table Leaderboard - Slide](../../docs/images/slides/sc-opening-day-1-15.png)
 
 - **2 Tables 버전**: 이름/국적/칩/BB/Percentage
 - **1 Table 버전**: 단일 테이블 상세 뷰
@@ -119,7 +144,6 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 #### 4.1.5 Mini Payouts ⭐ NEW
 
 ![Mini Payouts](../../docs/images/captions/lv-caption-36-mini_payouts-3.png)
-![Mini Payouts - Slide](../../docs/images/slides/lv-opening-26.png)
 
 - 플레이어 좌측/우측 공간 활용
 - **일반형**: 현재 상금 구조
@@ -142,7 +166,6 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 #### 4.2.2 Chip Flow
 
 ![Chip Flow](../../docs/images/captions/lv-caption-41-chip-flow-3.png)
-![Chip Flow - Slide](../../docs/images/slides/lv-graphic(special)-2.png)
 
 > "토너먼트 레귤러 입장에서 가장 참고할 가치가 높은 정보"
 
@@ -155,7 +178,6 @@ Final Day        ████░░░░░░░░░░░░░░░░░
 #### 4.2.3 Chips In Play (Chip Denomination) ⭐ NEW
 
 ![Chips In Play](../../docs/images/captions/lv-caption-43-chips-in-play-3.png)
-![Chips In Play - Slide](../../docs/images/slides/lv-opening-48.png)
 
 - 칩스택 좌측/우측 공간
 - **표시 타이밍**: 게임 시작 / Break 후 3핸드 이내
