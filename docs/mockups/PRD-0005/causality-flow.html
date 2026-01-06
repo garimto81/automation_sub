@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WSOP Caption - Causality Flow</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%);
+            color: #e8e8e8;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        #capture-target {
+            background: #0d1117;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8b949e;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .flow-row {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+        }
+        .flow-row::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -24px;
+            width: 2px;
+            height: 24px;
+            background: linear-gradient(to bottom, #30363d, transparent);
+        }
+        .flow-row:last-child::after {
+            display: none;
+        }
+
+        .row-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .step-number.step1 { background: linear-gradient(135deg, #f85149, #da3633); }
+        .step-number.step2 { background: linear-gradient(135deg, #f0883e, #d29922); }
+        .step-number.step3 { background: linear-gradient(135deg, #3fb950, #238636); }
+        .step-number.step4 { background: linear-gradient(135deg, #58a6ff, #1f6feb); }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .step-desc {
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .example-card {
+            background: #21262d;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #30363d;
+        }
+        .example-trigger {
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            color: #f85149;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #30363d;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+        .flow-step:last-child {
+            margin-bottom: 0;
+        }
+        .flow-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+        .flow-icon.write { background: rgba(240, 136, 62, 0.2); color: #f0883e; }
+        .flow-icon.read { background: rgba(63, 185, 80, 0.2); color: #3fb950; }
+        .flow-icon.render { background: rgba(88, 166, 255, 0.2); color: #58a6ff; }
+
+        .flow-content {
+            flex: 1;
+        }
+        .flow-action {
+            color: #c9d1d9;
+        }
+        .flow-table {
+            font-family: 'Consolas', monospace;
+            color: #7ee787;
+            font-size: 11px;
+        }
+        .flow-caption {
+            font-family: 'Consolas', monospace;
+            color: #58a6ff;
+            font-size: 11px;
+        }
+
+        .arrow-down {
+            text-align: center;
+            color: #30363d;
+            font-size: 18px;
+            margin: 4px 0;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #30363d;
+        }
+        .summary-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #8b949e;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .summary-card {
+            background: #21262d;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        .summary-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .summary-value.events { color: #f85149; }
+        .summary-value.tables { color: #3fb950; }
+        .summary-value.captions { color: #58a6ff; }
+        .summary-label {
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, rgba(248, 81, 73, 0.1), rgba(88, 166, 255, 0.1));
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .key-insight-icon {
+            font-size: 24px;
+        }
+        .key-insight-text {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .key-insight-text strong {
+            color: #f0883e;
+        }
+    </style>
+</head>
+<body>
+    <div id="capture-target">
+        <h1>Trigger → DB → Caption Causality Flow</h1>
+        <p class="subtitle">트리거 이벤트가 DB를 변경하고, 변경된 데이터로 자막이 생성되는 인과관계</p>
+
+        <div class="flow-container">
+            <!-- Step 1: Event Occurs -->
+            <div class="flow-row">
+                <div class="row-header">
+                    <div class="step-number step1">1</div>
+                    <div>
+                        <div class="step-title">HIGH Priority Events (빈번한 이벤트)</div>
+                        <div class="step-desc">핸드 종료, 레벨 변경, 탈락, 올인 감지</div>
+                    </div>
+                </div>
+                <div class="examples-grid">
+                    <div class="example-card">
+                        <div class="example-trigger">hand_completed</div>
+                        <div class="flow-step">
+                            <div class="flow-icon write">W</div>
+                            <div class="flow-content">
+                                <div class="flow-action">INSERT</div>
+                                <div class="flow-table">chip_history</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon read">R</div>
+                            <div class="flow-content">
+                                <div class="flow-action">SELECT</div>
+                                <div class="flow-table">chip_history, players</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon render">→</div>
+                            <div class="flow-content">
+                                <div class="flow-caption">Chip Flow</div>
+                                <div class="flow-caption">Tournament LB</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-trigger">level_change</div>
+                        <div class="flow-step">
+                            <div class="flow-icon write">W</div>
+                            <div class="flow-content">
+                                <div class="flow-action">UPDATE</div>
+                                <div class="flow-table">tournaments.current_level</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon read">R</div>
+                            <div class="flow-content">
+                                <div class="flow-action">SELECT</div>
+                                <div class="flow-table">blind_levels</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon render">→</div>
+                            <div class="flow-content">
+                                <div class="flow-caption">Blind Level</div>
+                                <div class="flow-caption">L-Bar Standard</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-trigger">player_eliminated</div>
+                        <div class="flow-step">
+                            <div class="flow-icon write">W</div>
+                            <div class="flow-content">
+                                <div class="flow-action">INSERT</div>
+                                <div class="flow-table">eliminations</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon read">R</div>
+                            <div class="flow-content">
+                                <div class="flow-action">SELECT</div>
+                                <div class="flow-table">eliminations, payouts</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon render">→</div>
+                            <div class="flow-content">
+                                <div class="flow-caption">Elimination Banner</div>
+                                <div class="flow-caption">Mini Payouts</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-trigger">all_in_detected</div>
+                        <div class="flow-step">
+                            <div class="flow-icon write">W</div>
+                            <div class="flow-content">
+                                <div class="flow-action">INSERT</div>
+                                <div class="flow-table">hand_actions (all-in)</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon read">R</div>
+                            <div class="flow-content">
+                                <div class="flow-action">SELECT</div>
+                                <div class="flow-table">players, payouts</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon render">→</div>
+                            <div class="flow-content">
+                                <div class="flow-caption">At Risk</div>
+                                <div class="flow-caption">Chip Comparison</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: MEDIUM/LOW Priority Events -->
+            <div class="flow-row">
+                <div class="row-header">
+                    <div class="step-number step2">2</div>
+                    <div>
+                        <div class="step-title">MEDIUM / LOW Priority Events</div>
+                        <div class="step-desc">피처 테이블 변경, ITM 진입, Day 시작, 브레이크 종료</div>
+                    </div>
+                </div>
+                <div class="examples-grid">
+                    <div class="example-card">
+                        <div class="example-trigger" style="color: #f0883e;">feature_table_change</div>
+                        <div class="flow-step">
+                            <div class="flow-icon write">W</div>
+                            <div class="flow-content">
+                                <div class="flow-action">UPDATE</div>
+                                <div class="flow-table">feature_tables.is_active</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon read">R</div>
+                            <div class="flow-content">
+                                <div class="flow-action">SELECT</div>
+                                <div class="flow-table">players, player_profiles</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon render">→</div>
+                            <div class="flow-content">
+                                <div class="flow-caption">Feature Table LB</div>
+                                <div class="flow-caption">Player Profile</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-trigger" style="color: #f0883e;">itm_reached</div>
+                        <div class="flow-step">
+                            <div class="flow-icon write">W</div>
+                            <div class="flow-content">
+                                <div class="flow-action">UPDATE</div>
+                                <div class="flow-table">tournaments.is_itm</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon read">R</div>
+                            <div class="flow-content">
+                                <div class="flow-action">SELECT</div>
+                                <div class="flow-table">payouts, tournaments</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon render">→</div>
+                            <div class="flow-content">
+                                <div class="flow-caption">Payouts</div>
+                                <div class="flow-caption">Tournament Info</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-trigger" style="color: #3fb950;">day_start</div>
+                        <div class="flow-step">
+                            <div class="flow-icon write">W</div>
+                            <div class="flow-content">
+                                <div class="flow-action">UPDATE</div>
+                                <div class="flow-table">tournaments.current_day</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon read">R</div>
+                            <div class="flow-content">
+                                <div class="flow-action">SELECT</div>
+                                <div class="flow-table">events, schedules</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon render">→</div>
+                            <div class="flow-content">
+                                <div class="flow-caption">Tournament Info</div>
+                                <div class="flow-caption">Broadcast Schedule</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example-card">
+                        <div class="example-trigger" style="color: #3fb950;">break_end</div>
+                        <div class="flow-step">
+                            <div class="flow-icon write">W</div>
+                            <div class="flow-content">
+                                <div class="flow-action">UPDATE</div>
+                                <div class="flow-table">tournaments.is_on_break</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon read">R</div>
+                            <div class="flow-content">
+                                <div class="flow-action">SELECT</div>
+                                <div class="flow-table">blind_levels, tournaments</div>
+                            </div>
+                        </div>
+                        <div class="arrow-down">↓</div>
+                        <div class="flow-step">
+                            <div class="flow-icon render">→</div>
+                            <div class="flow-content">
+                                <div class="flow-caption">Chips In Play</div>
+                                <div class="flow-caption">Blind Level</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <div class="summary-title">Causality Summary</div>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-value events">8</div>
+                    <div class="summary-label">Trigger Events</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-value tables">20</div>
+                    <div class="summary-label">DB Tables (Write/Read)</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-value captions">26</div>
+                    <div class="summary-label">Caption Types</div>
+                </div>
+            </div>
+
+            <div class="key-insight">
+                <div class="key-insight-icon">💡</div>
+                <div class="key-insight-text">
+                    <strong>핵심 인과관계:</strong> 트리거 이벤트는 단순히 자막을 "트리거"하는 것이 아니라,
+                    먼저 <strong>DB 상태를 변경(Write)</strong>합니다. 그 후 변경된 데이터를 <strong>조회(Read)</strong>하여
+                    자막을 생성합니다. 따라서 트리거 이벤트와 DB 테이블은 <strong>직접적인 인과관계</strong>가 있습니다.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

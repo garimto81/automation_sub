@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WSOP Caption - Trigger Events Tree</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        #capture-target {
+            background: #0d1117;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8b949e;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+        .tree-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .event-group {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid;
+        }
+        .event-group.high { border-color: #f85149; }
+        .event-group.medium { border-color: #f0883e; }
+        .event-group.low { border-color: #3fb950; }
+
+        .event-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .event-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .event-icon.high { background: rgba(248, 81, 73, 0.2); }
+        .event-icon.medium { background: rgba(240, 136, 62, 0.2); }
+        .event-icon.low { background: rgba(63, 185, 80, 0.2); }
+
+        .event-name {
+            font-size: 18px;
+            font-weight: 600;
+            font-family: 'Consolas', monospace;
+        }
+        .event-description {
+            font-size: 12px;
+            color: #8b949e;
+        }
+        .priority-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        .priority-badge.high { background: #f85149; color: white; }
+        .priority-badge.medium { background: #f0883e; color: white; }
+        .priority-badge.low { background: #3fb950; color: white; }
+
+        .connections {
+            display: flex;
+            gap: 32px;
+            margin-left: 52px;
+        }
+        .connection-section {
+            flex: 1;
+        }
+        .section-title {
+            font-size: 11px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .section-title::before {
+            content: '';
+            width: 8px;
+            height: 2px;
+            background: #30363d;
+        }
+        .connection-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .caption-tag {
+            background: #21262d;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            border: 1px solid #30363d;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .caption-tag .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        .caption-tag .dot.p0 { background: #f85149; }
+        .caption-tag .dot.p1 { background: #f0883e; }
+        .caption-tag .dot.p2 { background: #d29922; }
+
+        .table-tag {
+            background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: 'Consolas', monospace;
+            color: white;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #30363d;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #8b949e;
+        }
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="capture-target">
+        <h1>Trigger Events & Captions Relationship</h1>
+        <p class="subtitle">8개 트리거 이벤트 → 26개 자막 유형 → DB 테이블 매핑</p>
+
+        <div class="tree-container">
+            <!-- hand_completed -->
+            <div class="event-group high">
+                <div class="event-header">
+                    <div class="event-icon high">🃏</div>
+                    <div>
+                        <div class="event-name">hand_completed</div>
+                        <div class="event-description">핸드 종료 시 발생 (가장 빈번)</div>
+                    </div>
+                    <span class="priority-badge high">HIGH</span>
+                </div>
+                <div class="connections">
+                    <div class="connection-section">
+                        <div class="section-title">Triggered Captions</div>
+                        <div class="connection-items">
+                            <span class="caption-tag"><span class="dot p0"></span>Tournament LB</span>
+                            <span class="caption-tag"><span class="dot p1"></span>Mini Chip Counts</span>
+                            <span class="caption-tag"><span class="dot p0"></span>Chip Flow</span>
+                        </div>
+                    </div>
+                    <div class="connection-section">
+                        <div class="section-title">DB Tables</div>
+                        <div class="connection-items">
+                            <span class="table-tag">players</span>
+                            <span class="table-tag">chip_history</span>
+                            <span class="table-tag">hand_actions</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- level_change -->
+            <div class="event-group high">
+                <div class="event-header">
+                    <div class="event-icon high">⏰</div>
+                    <div>
+                        <div class="event-name">level_change</div>
+                        <div class="event-description">블라인드 레벨 변경 시</div>
+                    </div>
+                    <span class="priority-badge high">HIGH</span>
+                </div>
+                <div class="connections">
+                    <div class="connection-section">
+                        <div class="section-title">Triggered Captions</div>
+                        <div class="connection-items">
+                            <span class="caption-tag"><span class="dot p0"></span>Blind Level</span>
+                            <span class="caption-tag"><span class="dot p0"></span>L-Bar Standard</span>
+                            <span class="caption-tag"><span class="dot p0"></span>Tournament LB</span>
+                            <span class="caption-tag"><span class="dot p1"></span>Event Info</span>
+                        </div>
+                    </div>
+                    <div class="connection-section">
+                        <div class="section-title">DB Tables</div>
+                        <div class="connection-items">
+                            <span class="table-tag">blind_levels</span>
+                            <span class="table-tag">tournaments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- player_eliminated -->
+            <div class="event-group high">
+                <div class="event-header">
+                    <div class="event-icon high">💀</div>
+                    <div>
+                        <div class="event-name">player_eliminated</div>
+                        <div class="event-description">플레이어 탈락 시</div>
+                    </div>
+                    <span class="priority-badge high">HIGH</span>
+                </div>
+                <div class="connections">
+                    <div class="connection-section">
+                        <div class="section-title">Triggered Captions</div>
+                        <div class="connection-items">
+                            <span class="caption-tag"><span class="dot p0"></span>Elimination Banner</span>
+                            <span class="caption-tag"><span class="dot p1"></span>Mini Payouts</span>
+                            <span class="caption-tag"><span class="dot p0"></span>Tournament LB</span>
+                        </div>
+                    </div>
+                    <div class="connection-section">
+                        <div class="section-title">DB Tables</div>
+                        <div class="connection-items">
+                            <span class="table-tag">players</span>
+                            <span class="table-tag">payouts</span>
+                            <span class="table-tag">eliminations</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- all_in_detected -->
+            <div class="event-group high">
+                <div class="event-header">
+                    <div class="event-icon high">🔥</div>
+                    <div>
+                        <div class="event-name">all_in_detected</div>
+                        <div class="event-description">올인 감지 시</div>
+                    </div>
+                    <span class="priority-badge high">HIGH</span>
+                </div>
+                <div class="connections">
+                    <div class="connection-section">
+                        <div class="section-title">Triggered Captions</div>
+                        <div class="connection-items">
+                            <span class="caption-tag"><span class="dot p0"></span>At Risk</span>
+                            <span class="caption-tag"><span class="dot p1"></span>Chip Comparison</span>
+                        </div>
+                    </div>
+                    <div class="connection-section">
+                        <div class="section-title">DB Tables</div>
+                        <div class="connection-items">
+                            <span class="table-tag">players</span>
+                            <span class="table-tag">payouts</span>
+                            <span class="table-tag">chip_history</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- feature_table_change -->
+            <div class="event-group medium">
+                <div class="event-header">
+                    <div class="event-icon medium">🎯</div>
+                    <div>
+                        <div class="event-name">feature_table_change</div>
+                        <div class="event-description">피처 테이블 변경 시</div>
+                    </div>
+                    <span class="priority-badge medium">MEDIUM</span>
+                </div>
+                <div class="connections">
+                    <div class="connection-section">
+                        <div class="section-title">Triggered Captions</div>
+                        <div class="connection-items">
+                            <span class="caption-tag"><span class="dot p0"></span>Feature Table LB</span>
+                            <span class="caption-tag"><span class="dot p0"></span>Player Profile</span>
+                            <span class="caption-tag"><span class="dot p2"></span>Chip Stack Bar</span>
+                        </div>
+                    </div>
+                    <div class="connection-section">
+                        <div class="section-title">DB Tables</div>
+                        <div class="connection-items">
+                            <span class="table-tag">feature_tables</span>
+                            <span class="table-tag">players</span>
+                            <span class="table-tag">player_profiles</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- itm_reached -->
+            <div class="event-group medium">
+                <div class="event-header">
+                    <div class="event-icon medium">💰</div>
+                    <div>
+                        <div class="event-name">itm_reached</div>
+                        <div class="event-description">In The Money 진입 시</div>
+                    </div>
+                    <span class="priority-badge medium">MEDIUM</span>
+                </div>
+                <div class="connections">
+                    <div class="connection-section">
+                        <div class="section-title">Triggered Captions</div>
+                        <div class="connection-items">
+                            <span class="caption-tag"><span class="dot p0"></span>Payouts</span>
+                            <span class="caption-tag"><span class="dot p1"></span>Tournament Info</span>
+                        </div>
+                    </div>
+                    <div class="connection-section">
+                        <div class="section-title">DB Tables</div>
+                        <div class="connection-items">
+                            <span class="table-tag">payouts</span>
+                            <span class="table-tag">tournaments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- day_start -->
+            <div class="event-group low">
+                <div class="event-header">
+                    <div class="event-icon low">🌅</div>
+                    <div>
+                        <div class="event-name">day_start</div>
+                        <div class="event-description">방송 Day 시작 시</div>
+                    </div>
+                    <span class="priority-badge low">LOW</span>
+                </div>
+                <div class="connections">
+                    <div class="connection-section">
+                        <div class="section-title">Triggered Captions</div>
+                        <div class="connection-items">
+                            <span class="caption-tag"><span class="dot p1"></span>Tournament Info</span>
+                            <span class="caption-tag"><span class="dot p1"></span>Event Info</span>
+                            <span class="caption-tag"><span class="dot p2"></span>Broadcast Schedule</span>
+                        </div>
+                    </div>
+                    <div class="connection-section">
+                        <div class="section-title">DB Tables</div>
+                        <div class="connection-items">
+                            <span class="table-tag">tournaments</span>
+                            <span class="table-tag">events</span>
+                            <span class="table-tag">schedules</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- break_end -->
+            <div class="event-group low">
+                <div class="event-header">
+                    <div class="event-icon low">☕</div>
+                    <div>
+                        <div class="event-name">break_end</div>
+                        <div class="event-description">브레이크 종료 시</div>
+                    </div>
+                    <span class="priority-badge low">LOW</span>
+                </div>
+                <div class="connections">
+                    <div class="connection-section">
+                        <div class="section-title">Triggered Captions</div>
+                        <div class="connection-items">
+                            <span class="caption-tag"><span class="dot p2"></span>Chips In Play</span>
+                            <span class="caption-tag"><span class="dot p0"></span>Blind Level</span>
+                        </div>
+                    </div>
+                    <div class="connection-section">
+                        <div class="section-title">DB Tables</div>
+                        <div class="connection-items">
+                            <span class="table-tag">blind_levels</span>
+                            <span class="table-tag">tournaments</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #f85149;"></div>
+                P0 (Critical)
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #f0883e;"></div>
+                P1 (High)
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #d29922;"></div>
+                P2 (Medium)
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #238636;"></div>
+                DB Table
+            </div>
+        </div>
+    </div>
+</body>
+</html>

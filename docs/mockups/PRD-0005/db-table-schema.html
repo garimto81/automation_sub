@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WSOP Caption - DB Schema Tree</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            color: #e8e8e8;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        #capture-target {
+            background: #0d1117;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #3fb950, #56d364);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8b949e;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .schema-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .table-card {
+            background: #161b22;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #30363d;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .table-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .table-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #30363d;
+        }
+        .table-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .table-icon.core { background: linear-gradient(135deg, #238636, #2ea043); }
+        .table-icon.player { background: linear-gradient(135deg, #1f6feb, #388bfd); }
+        .table-icon.game { background: linear-gradient(135deg, #8957e5, #a371f7); }
+        .table-icon.queue { background: linear-gradient(135deg, #f0883e, #f9826c); }
+
+        .table-name {
+            font-family: 'Consolas', monospace;
+            font-size: 15px;
+            font-weight: 600;
+            color: #58a6ff;
+        }
+        .table-desc {
+            font-size: 11px;
+            color: #8b949e;
+        }
+        .row-count {
+            margin-left: auto;
+            background: #21262d;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #8b949e;
+        }
+
+        .columns-list {
+            padding: 12px 16px;
+        }
+        .column-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 12px;
+            border-bottom: 1px solid #21262d;
+        }
+        .column-item:last-child {
+            border-bottom: none;
+        }
+        .column-name {
+            font-family: 'Consolas', monospace;
+            color: #c9d1d9;
+        }
+        .column-type {
+            margin-left: auto;
+            color: #7ee787;
+            font-size: 10px;
+            background: rgba(126, 231, 135, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .column-pk {
+            color: #f0883e;
+            font-size: 10px;
+        }
+        .column-fk {
+            color: #a371f7;
+            font-size: 10px;
+        }
+
+        .table-footer {
+            padding: 12px 16px;
+            background: #21262d;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .caption-mini {
+            background: #30363d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            color: #8b949e;
+        }
+
+        .section-divider {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 0 10px;
+        }
+        .section-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #8b949e;
+            white-space: nowrap;
+        }
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #30363d, transparent);
+        }
+    </style>
+</head>
+<body>
+    <div id="capture-target">
+        <h1>Database Schema Structure</h1>
+        <p class="subtitle">20개 테이블 헤더 구조 및 자막 매핑 (PRD-0003 + PRD-0004)</p>
+
+        <div class="schema-grid">
+            <!-- Core Reference Section -->
+            <div class="section-divider">
+                <span class="section-label">Core Reference (4 tables)</span>
+                <div class="section-line"></div>
+            </div>
+
+            <!-- venues -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon core">🏟️</div>
+                    <div>
+                        <div class="table-name">venues</div>
+                        <div class="table-desc">장소 정보</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">venue_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">venue_name</span>
+                        <span class="column-type">VARCHAR(200)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">city</span>
+                        <span class="column-type">VARCHAR(100)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">drone_shot_url</span>
+                        <span class="column-type">TEXT</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Venue/Location</span>
+                </div>
+            </div>
+
+            <!-- events -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon core">📅</div>
+                    <div>
+                        <div class="table-name">events</div>
+                        <div class="table-desc">이벤트 정보</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">event_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">event_code</span>
+                        <span class="column-type">VARCHAR(50)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">event_full_name</span>
+                        <span class="column-type">VARCHAR(300)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">sponsor_logos</span>
+                        <span class="column-type">JSONB</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Event Name</span>
+                    <span class="caption-mini">Event Info</span>
+                </div>
+            </div>
+
+            <!-- commentators -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon core">🎙️</div>
+                    <div>
+                        <div class="table-name">commentators</div>
+                        <div class="table-desc">해설자 정보</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">commentator_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">name</span>
+                        <span class="column-type">VARCHAR(100)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">photo_url</span>
+                        <span class="column-type">TEXT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">credentials</span>
+                        <span class="column-type">TEXT</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Commentator Profile</span>
+                </div>
+            </div>
+
+            <!-- schedules -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon core">📺</div>
+                    <div>
+                        <div class="table-name">schedules</div>
+                        <div class="table-desc">방송 스케줄</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">schedule_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">broadcast_date</span>
+                        <span class="column-type">DATE</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">start_time</span>
+                        <span class="column-type">TIME</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">channel</span>
+                        <span class="column-type">VARCHAR(50)</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Broadcast Schedule</span>
+                </div>
+            </div>
+
+            <!-- Tournament Section -->
+            <div class="section-divider">
+                <span class="section-label">Tournament (3 tables)</span>
+                <div class="section-line"></div>
+            </div>
+
+            <!-- tournaments -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon game">🏆</div>
+                    <div>
+                        <div class="table-name">tournaments</div>
+                        <div class="table-desc">토너먼트 정보</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">tournament_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-fk">FK</span>
+                        <span class="column-name">event_id</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">buy_in</span>
+                        <span class="column-type">DECIMAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">prize_pool</span>
+                        <span class="column-type">DECIMAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">remaining_players</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">current_level</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Tournament Info</span>
+                    <span class="caption-mini">L-Bar</span>
+                    <span class="caption-mini">Event Info</span>
+                </div>
+            </div>
+
+            <!-- blind_levels -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon game">⏱️</div>
+                    <div>
+                        <div class="table-name">blind_levels</div>
+                        <div class="table-desc">블라인드 레벨</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">level_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">level_number</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">small_blind</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">big_blind</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">ante</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">duration_minutes</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Blind Level</span>
+                    <span class="caption-mini">Chips In Play</span>
+                </div>
+            </div>
+
+            <!-- payouts -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon game">💵</div>
+                    <div>
+                        <div class="table-name">payouts</div>
+                        <div class="table-desc">상금 구조</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">payout_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">place_start</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">place_end</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">amount</span>
+                        <span class="column-type">DECIMAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">is_current_bubble</span>
+                        <span class="column-type">BOOLEAN</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Payouts</span>
+                    <span class="caption-mini">Mini Payouts</span>
+                    <span class="caption-mini">At Risk</span>
+                </div>
+            </div>
+
+            <!-- Player Section -->
+            <div class="section-divider">
+                <span class="section-label">Player (6 tables)</span>
+                <div class="section-line"></div>
+            </div>
+
+            <!-- players -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon player">👤</div>
+                    <div>
+                        <div class="table-name">players</div>
+                        <div class="table-desc">플레이어 기본 정보</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">player_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">name</span>
+                        <span class="column-type">VARCHAR(100)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">nationality</span>
+                        <span class="column-type">CHAR(2)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">chips</span>
+                        <span class="column-type">BIGINT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">current_rank</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">seat_number</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Tournament LB</span>
+                    <span class="caption-mini">Feature LB</span>
+                    <span class="caption-mini">Elimination</span>
+                </div>
+            </div>
+
+            <!-- player_profiles -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon player">📋</div>
+                    <div>
+                        <div class="table-name">player_profiles</div>
+                        <div class="table-desc">플레이어 프로필 상세</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">profile_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-fk">FK</span>
+                        <span class="column-name">player_id</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">wsop_bracelets</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">total_earnings</span>
+                        <span class="column-type">DECIMAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">biography</span>
+                        <span class="column-type">TEXT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">notable_wins</span>
+                        <span class="column-type">JSONB</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Player Profile</span>
+                    <span class="caption-mini">Intro Card</span>
+                    <span class="caption-mini">Heads-Up</span>
+                </div>
+            </div>
+
+            <!-- player_stats -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon player">📊</div>
+                    <div>
+                        <div class="table-name">player_stats</div>
+                        <div class="table-desc">플레이어 통계</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">stat_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-fk">FK</span>
+                        <span class="column-name">player_id</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">vpip</span>
+                        <span class="column-type">DECIMAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">pfr</span>
+                        <span class="column-type">DECIMAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">aggression_factor</span>
+                        <span class="column-type">DECIMAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">hands_played</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">VPIP Stats</span>
+                    <span class="caption-mini">Heads-Up</span>
+                </div>
+            </div>
+
+            <!-- chip_history -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon player">📈</div>
+                    <div>
+                        <div class="table-name">chip_history</div>
+                        <div class="table-desc">칩 변동 히스토리</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">history_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-fk">FK</span>
+                        <span class="column-name">player_id</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">hand_number</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">chips</span>
+                        <span class="column-type">BIGINT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">chips_change</span>
+                        <span class="column-type">BIGINT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">bb_count</span>
+                        <span class="column-type">DECIMAL</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Chip Flow</span>
+                    <span class="caption-mini">Chip Comparison</span>
+                    <span class="caption-mini">Stack Bar</span>
+                </div>
+            </div>
+
+            <!-- hand_actions -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon game">🎲</div>
+                    <div>
+                        <div class="table-name">hand_actions</div>
+                        <div class="table-desc">핸드 액션 기록</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">action_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-fk">FK</span>
+                        <span class="column-name">hand_id</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">street</span>
+                        <span class="column-type">VARCHAR(10)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">action</span>
+                        <span class="column-type">VARCHAR(20)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">bet_amount</span>
+                        <span class="column-type">BIGINT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">pot_size_after</span>
+                        <span class="column-type">BIGINT</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">VPIP Stats</span>
+                    <span class="caption-mini">Chip Flow</span>
+                </div>
+            </div>
+
+            <!-- eliminations -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon player">🚪</div>
+                    <div>
+                        <div class="table-name">eliminations</div>
+                        <div class="table-desc">탈락 정보</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">elimination_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-fk">FK</span>
+                        <span class="column-name">player_id</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">final_rank</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">payout_received</span>
+                        <span class="column-type">DECIMAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">eliminated_by_id</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">Elimination Banner</span>
+                    <span class="caption-mini">Mini Payouts</span>
+                </div>
+            </div>
+
+            <!-- Queue Section -->
+            <div class="section-divider">
+                <span class="section-label">Graphics Queue (1 table)</span>
+                <div class="section-line"></div>
+            </div>
+
+            <!-- graphics_queue -->
+            <div class="table-card">
+                <div class="table-header">
+                    <div class="table-icon queue">📤</div>
+                    <div>
+                        <div class="table-name">graphics_queue</div>
+                        <div class="table-desc">자막 렌더링 큐</div>
+                    </div>
+                </div>
+                <div class="columns-list">
+                    <div class="column-item">
+                        <span class="column-pk">PK</span>
+                        <span class="column-name">queue_id</span>
+                        <span class="column-type">SERIAL</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">graphic_type</span>
+                        <span class="column-type">VARCHAR(50)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">trigger_event</span>
+                        <span class="column-type">VARCHAR(50)</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">payload</span>
+                        <span class="column-type">JSONB</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">priority</span>
+                        <span class="column-type">INT</span>
+                    </div>
+                    <div class="column-item">
+                        <span class="column-name">status</span>
+                        <span class="column-type">VARCHAR(20)</span>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="caption-mini">All 26 Captions</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
