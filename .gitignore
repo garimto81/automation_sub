@@ -48,6 +48,7 @@ token.pickle
 .DS_Store
 Thumbs.db
 desktop.ini
+nul
 
 # Logs
 *.log
