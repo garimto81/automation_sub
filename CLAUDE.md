@@ -46,7 +46,20 @@ python scripts/analyze_slide_images.py
 python scripts/extract_captions_20_62.py
 ```
 
-**의존성**: `playwright`, `google-api-python-client`, `google-auth-oauthlib`, `requests`
+---
+
+## 의존성 설치
+
+```powershell
+pip install -r requirements.txt
+npx playwright install chromium  # 캡처 스크립트용
+```
+
+### OAuth 인증 (Google API)
+
+Google API 스크립트는 `D:\AI\claude01\json\` 경로의 credentials 사용:
+- `desktop_credentials.json` - OAuth 클라이언트 ID
+- `token.json` - 캐시된 액세스 토큰 (자동 생성)
 
 ---
 
