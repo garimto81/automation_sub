@@ -270,15 +270,9 @@ CREATE TABLE wsop_plus.schedules (
     time_end TIME,
     timezone VARCHAR(50) DEFAULT 'UTC',
 
-    -- Calculated timestamps
-    start_timestamp TIMESTAMPTZ GENERATED ALWAYS AS (
-        (date || ' ' || time_start)::TIMESTAMPTZ AT TIME ZONE COALESCE(timezone, 'UTC')
-    ) STORED,
-    end_timestamp TIMESTAMPTZ GENERATED ALWAYS AS (
-        CASE WHEN time_end IS NOT NULL
-             THEN (date || ' ' || time_end)::TIMESTAMPTZ AT TIME ZONE COALESCE(timezone, 'UTC')
-             ELSE NULL END
-    ) STORED,
+    -- Calculated timestamps (set via trigger or application)
+    start_timestamp TIMESTAMPTZ,
+    end_timestamp TIMESTAMPTZ,
 
     -- Event info
     event_title VARCHAR(255) NOT NULL,

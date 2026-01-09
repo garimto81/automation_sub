@@ -195,6 +195,29 @@ CREATE TRIGGER trg_wsop_schedules_updated
     BEFORE UPDATE ON wsop_plus.schedules
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
 
+-- Calculate schedule timestamps
+CREATE OR REPLACE FUNCTION wsop_plus.calculate_schedule_timestamps()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Calculate start_timestamp
+    NEW.start_timestamp := (NEW.date + NEW.time_start) AT TIME ZONE COALESCE(NEW.timezone, 'UTC');
+
+    -- Calculate end_timestamp if time_end is set
+    IF NEW.time_end IS NOT NULL THEN
+        NEW.end_timestamp := (NEW.date + NEW.time_end) AT TIME ZONE COALESCE(NEW.timezone, 'UTC');
+    ELSE
+        NEW.end_timestamp := NULL;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_wsop_schedules_calc_timestamps
+    BEFORE INSERT OR UPDATE OF date, time_start, time_end, timezone ON wsop_plus.schedules
+    FOR EACH ROW
+    EXECUTE FUNCTION wsop_plus.calculate_schedule_timestamps();
+
 -- manual schema triggers
 CREATE TRIGGER trg_manual_players_updated
     BEFORE UPDATE ON manual.players_master

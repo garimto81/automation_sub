@@ -104,21 +104,13 @@ CREATE TABLE manual.player_profiles (
 
     -- Personal info
     birth_date DATE,
-    age INTEGER GENERATED ALWAYS AS (
-        CASE WHEN birth_date IS NOT NULL
-        THEN EXTRACT(YEAR FROM age(birth_date))::INTEGER
-        ELSE NULL END
-    ) STORED,
+    age INTEGER,  -- Calculated via application or view
     birth_place VARCHAR(255),
 
     -- Physical (optional, for graphics)
     height_cm INTEGER,
     poker_start_year INTEGER,
-    years_playing INTEGER GENERATED ALWAYS AS (
-        CASE WHEN poker_start_year IS NOT NULL
-        THEN EXTRACT(YEAR FROM NOW())::INTEGER - poker_start_year
-        ELSE NULL END
-    ) STORED,
+    years_playing INTEGER,  -- Calculated via application or view
 
     -- Playing style
     playing_style VARCHAR(50),
