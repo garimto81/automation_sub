@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **WSOP Broadcast Graphics - 서브 프로젝트** (`automation_sub`)
 
-WSOP 포커 토너먼트 방송 그래픽 시스템의 PRD 문서 관리 및 자동화 스크립트 저장소.
+WSOP 포커 토너먼트 방송 그래픽 시스템의 PRD 문서 관리, Supabase DB 스키마, 자동화 스크립트 저장소.
 
 ---
 
@@ -19,31 +19,32 @@ WSOP 포커 토너먼트 방송 그래픽 시스템의 PRD 문서 관리 및 자
 ### 다이어그램 캡처 (Playwright 필수)
 
 ```powershell
-# HTML 목업 → PNG 캡처 (#capture-target 요소)
-python scripts/capture_prd_diagrams.py
+python scripts/capture_prd_diagrams.py  # HTML 목업 → PNG (#capture-target)
 ```
 
 ### Google API 스크립트 (OAuth 인증 필요)
 
 ```powershell
-# PRD → Google Docs 변환 (스타일 자동 적용)
-python scripts/create_prd_google_docs.py
-
-# Google Docs에 이미지 삽입
-python scripts/add_images_to_prd.py
-
-# Google Slides 이미지 추출 (100KB+ 이미지만)
-python scripts/extract_slide_images.py
+python scripts/create_prd_google_docs.py   # PRD → Google Docs 변환
+python scripts/add_images_to_prd.py        # Google Docs에 이미지 삽입
+python scripts/extract_slide_images.py    # Slides 이미지 추출 (100KB+)
+python scripts/create_caption_sheet.py    # Caption Sheet 생성
 ```
 
 ### 슬라이드 분석
 
 ```powershell
-# 슬라이드 이미지 분석
-python scripts/analyze_slide_images.py
+python scripts/analyze_slide_images.py    # 슬라이드 이미지 분석
+python scripts/extract_captions_20_62.py  # 자막 이미지 추출 (20-62)
+```
 
-# 자막 이미지 추출 (슬라이드 20-62)
-python scripts/extract_captions_20_62.py
+### Supabase Migration
+
+```powershell
+python scripts/supabase/combine_migrations.py   # SQL 파일 병합
+python scripts/supabase/apply_migrations.py     # Migration 적용
+python scripts/supabase/apply_via_api.py        # REST API로 적용
+python scripts/supabase/apply_ipv6.py           # IPv6 네트워크 적용
 ```
 
 ---
@@ -52,44 +53,63 @@ python scripts/extract_captions_20_62.py
 
 ```powershell
 pip install -r requirements.txt
-npx playwright install chromium  # 캡처 스크립트용
+npx playwright install chromium
 ```
 
 ### OAuth 인증 (Google API)
 
-Google API 스크립트는 `D:\AI\claude01\json\` 경로의 credentials 사용:
+`D:\AI\claude01\json\` 경로의 credentials 사용:
 - `desktop_credentials.json` - OAuth 클라이언트 ID
 - `token.json` - 캐시된 액세스 토큰 (자동 생성)
 
 ---
 
-## PRD 아키텍처
+## 공유 인프라 (automation_hub)
 
-### 3개 PRD 의존성
-
-```
-PRD-0001 (Graphics)      # 26개 자막 유형, UI 컴포넌트, 디자인 가이드
-    ↓
-PRD-0002 (Automation)    # 5대 자동화 영역, AI Agent 아키텍처
-    ↓
-PRD-0003 (Caption)       # 데이터 수집→DB→자막 파이프라인
-```
-
-### PRD 수정 규칙
-
-| 규칙 | 설명 |
+| 문서 | 위치 |
 |------|------|
-| **Changelog 필수** | 버전, 날짜, 변경 내용 기록 |
-| **이미지 경로** | `../../docs/images/` (상대 경로) |
-| **Source Documents** | Google Slides 링크 유지 |
+| Hub PRD | `C:\claude\automation_hub\docs\prds\` |
+| Schema 설계 | `C:\claude\automation_hub\docs\SCHEMA_DESIGN.md` |
 
-### 핵심 기술 스택
+
+---
+
+## Supabase 설정
+
+### wsop 스키마 분리
+
+```
+public (기본)     → 사용 안 함 (RLS 복잡도)
+wsop (전용)       → Caption DB 전용 스키마
+```
+
+### Migration 파일
+
+```
+supabase/migrations/
+├── 20260108103017_remote_schema.sql    # 원격 스키마 동기화
+├── 20260108210000_create_schemas.sql   # 스키마 생성
+├── 20260108220000_wsop_caption_schema.sql  # Caption 테이블
+└── 20260108230000_wsop_functions_views.sql # 함수/뷰
+```
+
+### 로컬 개발
+
+```powershell
+supabase start       # 로컬 Supabase 시작
+supabase db reset    # DB 초기화 + migration 적용
+supabase db push     # 원격 DB에 migration 적용
+```
+
+---
+
+## 핵심 기술 스택
 
 | Layer | Technology |
 |-------|------------|
 | Frontend | React + TypeScript, Framer Motion |
 | Backend | FastAPI, WebSocket |
-| Database | PostgreSQL (10개 테이블) |
+| Database | Supabase (PostgreSQL, wsop 스키마) |
 | AI | OpenAI GPT-4o |
 
 ### 데이터 소스 (PRD-0003, 상호 배타적)
@@ -97,8 +117,8 @@ PRD-0003 (Caption)       # 데이터 수집→DB→자막 파이프라인
 | 소스 | 범위 |
 |------|------|
 | pokerGFX JSON | Feature Table 전용 (RFID) |
-| WSOP+ CSV | 대회 정보 + Other Tables |
-| 수기 입력 | 프로필, 좌석, 코멘테이터 |
+| WSOP+ (Main) | 모든 테이블 (좌석, 칩, 선수 등) |
+| 수기 입력 | 프로필, 코멘테이터 보완 |
 
 ---
 
@@ -106,14 +126,15 @@ PRD-0003 (Caption)       # 데이터 수집→DB→자막 파이프라인
 
 ```
 automation_sub/
-├── tasks/prds/           # PRD 문서 (핵심)
-│   ├── 0001-prd-wsop-broadcast-graphics.md
-│   ├── 0002-prd-workflow-automation.md
-│   └── 0003-prd-caption-workflow.md
-├── scripts/              # Python 자동화 스크립트 (7개)
+├── tasks/prds/           # PRD 문서 (5개 + 분할 폴더)
+├── scripts/              # Python 자동화 스크립트 (12개)
+│   └── supabase/         # Supabase migration 스크립트
+├── supabase/
+│   ├── config.toml       # Supabase 설정
+│   └── migrations/       # SQL migration 파일
 ├── docs/
 │   ├── images/
-│   │   ├── captions/     # 자막 디자인 참조 (100+개)
+│   │   ├── captions/     # 자막 디자인 참조
 │   │   └── slides/       # Slides 추출 이미지
 │   ├── mockups/          # HTML 목업 파일
 │   └── checklists/       # PRD별 체크리스트

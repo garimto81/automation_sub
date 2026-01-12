@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>DB-AE Mapping Flowchart</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+            color: #fff;
+            padding: 30px;
+        }
+
+        #capture-target {
+            width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 8px;
+            color: #00d4ff;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 13px;
+        }
+
+        /* SVG Container */
+        .diagram-svg {
+            width: 100%;
+            height: 1400px;
+        }
+
+        /* Node Styles */
+        .node-rect {
+            rx: 8;
+            ry: 8;
+            stroke-width: 2;
+        }
+
+        .node-input { fill: rgba(255, 193, 7, 0.2); stroke: #ffc107; }
+        .node-db { fill: rgba(102, 126, 234, 0.2); stroke: #667eea; }
+        .node-api { fill: rgba(245, 87, 108, 0.2); stroke: #f5576c; }
+        .node-ae { fill: rgba(0, 242, 254, 0.2); stroke: #00f2fe; }
+        .node-caption { fill: rgba(67, 233, 123, 0.2); stroke: #43e97b; }
+
+        .node-title {
+            font-size: 12px;
+            font-weight: 600;
+            fill: #fff;
+        }
+
+        .node-subtitle {
+            font-size: 10px;
+            fill: #888;
+        }
+
+        .node-badge {
+            font-size: 9px;
+            fill: #00d4ff;
+        }
+
+        /* Arrow Styles */
+        .arrow-line {
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .arrow-input-db { stroke: #ffc107; }
+        .arrow-db-api { stroke: #667eea; }
+        .arrow-api-ae { stroke: #f5576c; }
+        .arrow-ae-caption { stroke: #00f2fe; }
+
+        /* Group Headers */
+        .group-header {
+            font-size: 14px;
+            font-weight: bold;
+            fill: #fff;
+        }
+
+        .group-bg {
+            fill: rgba(255,255,255,0.03);
+            rx: 10;
+            ry: 10;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 1;
+        }
+
+        /* Legend */
+        .legend-text {
+            font-size: 11px;
+            fill: #aaa;
+        }
+
+        /* Transform Label */
+        .transform-label {
+            font-size: 9px;
+            fill: #f5576c;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div id="capture-target">
+        <h1>Input → DB → AE 매핑 관계도</h1>
+        <p class="subtitle">인풋 소스 (gfx/wsop+/manual) → wsop 스키마 → API 변환 → AEP 레이어 → 자막 콤포지션</p>
+
+        <svg class="diagram-svg" viewBox="0 0 1050 600">
+            <defs>
+                <!-- Arrow Markers -->
+                <marker id="arrow-input" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#ffc107"/>
+                </marker>
+                <marker id="arrow-db" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#667eea"/>
+                </marker>
+                <marker id="arrow-api" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#f5576c"/>
+                </marker>
+                <marker id="arrow-ae" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#00f2fe"/>
+                </marker>
+                <marker id="arrow-caption" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#43e97b"/>
+                </marker>
+            </defs>
+
+            <!-- Group Backgrounds -->
+            <rect class="group-bg" x="20" y="60" width="210" height="350"/>
+            <rect class="group-bg" x="250" y="60" width="190" height="370"/>
+            <rect class="group-bg" x="460" y="60" width="175" height="270"/>
+            <rect class="group-bg" x="655" y="60" width="165" height="360"/>
+            <rect class="group-bg" x="845" y="60" width="185" height="370"/>
+
+            <!-- Group Headers -->
+            <text class="group-header" x="125" y="45" text-anchor="middle" fill="#ffc107">Input</text>
+            <text class="group-header" x="345" y="45" text-anchor="middle" fill="#667eea">wsop DB</text>
+            <text class="group-header" x="547" y="45" text-anchor="middle" fill="#f5576c">API</text>
+            <text class="group-header" x="737" y="45" text-anchor="middle" fill="#00f2fe">AE Layer</text>
+            <text class="group-header" x="937" y="45" text-anchor="middle" fill="#43e97b">Caption</text>
+
+            <!-- ========== INPUT SOURCE NODES ========== -->
+            <!-- pokerGFX JSON -->
+            <rect class="node-rect node-input" x="30" y="75" width="190" height="55"/>
+            <text class="node-title" x="125" y="98" text-anchor="middle">📡 pokerGFX</text>
+            <text class="node-subtitle" x="125" y="115" text-anchor="middle">RFID 실시간 (MAIN)</text>
+
+            <!-- WSOP+ Main -->
+            <rect class="node-rect node-input" x="30" y="145" width="190" height="55"/>
+            <text class="node-title" x="125" y="168" text-anchor="middle">🌐 WSOP+</text>
+            <text class="node-subtitle" x="125" y="185" text-anchor="middle">공식 대회 데이터</text>
+
+            <!-- Manual Input -->
+            <rect class="node-rect node-input" x="30" y="215" width="190" height="55"/>
+            <text class="node-title" x="125" y="238" text-anchor="middle">✏️ Manual</text>
+            <text class="node-subtitle" x="125" y="255" text-anchor="middle">보완/프로필/장소</text>
+
+            <!-- Input Source Legend -->
+            <rect x="30" y="290" width="190" height="100" fill="rgba(255,193,7,0.05)" rx="6" stroke="rgba(255,193,7,0.3)"/>
+            <text x="125" y="308" text-anchor="middle" fill="#ffc107" font-size="10" font-weight="bold">데이터 소스 우선순위</text>
+            <text x="40" y="328" fill="#43e97b" font-size="9">1. pokerGFX (실시간 RFID)</text>
+            <text x="40" y="348" fill="#00f2fe" font-size="9">2. WSOP+ (공식 데이터)</text>
+            <text x="40" y="368" fill="#f5576c" font-size="9">3. Manual (Fallback)</text>
+
+            <!-- ========== DB NODES ========== -->
+            <!-- tournaments -->
+            <rect class="node-rect node-db" x="260" y="70" width="165" height="38"/>
+            <text class="node-title" x="342" y="93" text-anchor="middle">📊 tournaments</text>
+
+            <!-- blind_levels -->
+            <rect class="node-rect node-db" x="260" y="115" width="165" height="38"/>
+            <text class="node-title" x="342" y="138" text-anchor="middle">📊 blind_levels</text>
+
+            <!-- payouts -->
+            <rect class="node-rect node-db" x="260" y="160" width="165" height="38"/>
+            <text class="node-title" x="342" y="183" text-anchor="middle">📊 payouts</text>
+
+            <!-- players_master -->
+            <rect class="node-rect node-db" x="260" y="205" width="165" height="38"/>
+            <text class="node-title" x="342" y="228" text-anchor="middle">📊 players_master</text>
+
+            <!-- player_instances -->
+            <rect class="node-rect node-db" x="260" y="250" width="165" height="38"/>
+            <text class="node-title" x="342" y="273" text-anchor="middle">📊 player_instances</text>
+
+            <!-- schedules -->
+            <rect class="node-rect node-db" x="260" y="295" width="165" height="38"/>
+            <text class="node-title" x="342" y="318" text-anchor="middle">📊 schedules</text>
+
+            <!-- commentators -->
+            <rect class="node-rect node-db" x="260" y="340" width="165" height="38"/>
+            <text class="node-title" x="342" y="363" text-anchor="middle">📊 commentators</text>
+
+            <!-- events -->
+            <rect class="node-rect node-db" x="260" y="385" width="80" height="32"/>
+            <text class="node-title" x="300" y="405" text-anchor="middle">📊 events</text>
+
+            <!-- venues -->
+            <rect class="node-rect node-db" x="345" y="385" width="80" height="32"/>
+            <text class="node-title" x="385" y="405" text-anchor="middle">📊 venues</text>
+
+            <!-- ========== API NODES ========== -->
+            <!-- 숫자→통화 -->
+            <rect class="node-rect node-api" x="470" y="70" width="150" height="35"/>
+            <text class="node-title" x="545" y="92" text-anchor="middle">⚡ 숫자→통화</text>
+
+            <!-- K/M 단위 -->
+            <rect class="node-rect node-api" x="470" y="112" width="150" height="35"/>
+            <text class="node-title" x="545" y="134" text-anchor="middle">⚡ K/M 단위</text>
+
+            <!-- 블라인드 포맷 -->
+            <rect class="node-rect node-api" x="470" y="154" width="150" height="35"/>
+            <text class="node-title" x="545" y="176" text-anchor="middle">⚡ 블라인드 포맷</text>
+
+            <!-- ISO→Flag -->
+            <rect class="node-rect node-api" x="470" y="196" width="150" height="35"/>
+            <text class="node-title" x="545" y="218" text-anchor="middle">⚡ ISO→Flag</text>
+
+            <!-- BB 계산 -->
+            <rect class="node-rect node-api" x="470" y="238" width="150" height="35"/>
+            <text class="node-title" x="545" y="260" text-anchor="middle">⚡ BB 계산</text>
+
+            <!-- 대문자 변환 -->
+            <rect class="node-rect node-api" x="470" y="280" width="150" height="35"/>
+            <text class="node-title" x="545" y="302" text-anchor="middle">⚡ 대문자/날짜</text>
+
+            <!-- ========== AE LAYER NODES ========== -->
+            <!-- Name 1~8 -->
+            <rect class="node-rect node-ae" x="665" y="70" width="145" height="32"/>
+            <text class="node-title" x="737" y="90" text-anchor="middle">🎬 Name 1~8</text>
+
+            <!-- Chips 1~8 -->
+            <rect class="node-rect node-ae" x="665" y="108" width="145" height="32"/>
+            <text class="node-title" x="737" y="128" text-anchor="middle">🎬 Chips 1~8</text>
+
+            <!-- BBs 1~8 -->
+            <rect class="node-rect node-ae" x="665" y="146" width="145" height="32"/>
+            <text class="node-title" x="737" y="166" text-anchor="middle">🎬 BBs 1~8</text>
+
+            <!-- Flag 1~9 -->
+            <rect class="node-rect node-ae" x="665" y="184" width="145" height="32"/>
+            <text class="node-title" x="737" y="204" text-anchor="middle">🎬 Flag 1~9</text>
+
+            <!-- Rank/prize -->
+            <rect class="node-rect node-ae" x="665" y="222" width="145" height="32"/>
+            <text class="node-title" x="737" y="242" text-anchor="middle">🎬 Rank/prize 1~9</text>
+
+            <!-- level/blinds -->
+            <rect class="node-rect node-ae" x="665" y="260" width="145" height="32"/>
+            <text class="node-title" x="737" y="280" text-anchor="middle">🎬 level/blinds</text>
+
+            <!-- Buy-in/Total -->
+            <rect class="node-rect node-ae" x="665" y="298" width="145" height="32"/>
+            <text class="node-title" x="737" y="318" text-anchor="middle">🎬 Buy-in/Total</text>
+
+            <!-- Date/Time -->
+            <rect class="node-rect node-ae" x="665" y="336" width="145" height="32"/>
+            <text class="node-title" x="737" y="356" text-anchor="middle">🎬 Date/Time 1~6</text>
+
+            <!-- Commentator Name -->
+            <rect class="node-rect node-ae" x="665" y="374" width="145" height="32"/>
+            <text class="node-title" x="737" y="394" text-anchor="middle">🎬 Name/Sub 1~4</text>
+
+            <!-- ========== CAPTION NODES ========== -->
+            <!-- Feature Table LB -->
+            <rect class="node-rect node-caption" x="855" y="70" width="165" height="35"/>
+            <text class="node-title" x="937" y="92" text-anchor="middle">📺 Feature Table LB</text>
+
+            <!-- Mini Chip Counts -->
+            <rect class="node-rect node-caption" x="855" y="110" width="165" height="35"/>
+            <text class="node-title" x="937" y="132" text-anchor="middle">📺 Mini Chip Counts</text>
+
+            <!-- Payouts -->
+            <rect class="node-rect node-caption" x="855" y="150" width="165" height="35"/>
+            <text class="node-title" x="937" y="172" text-anchor="middle">📺 Payouts</text>
+
+            <!-- Event Info -->
+            <rect class="node-rect node-caption" x="855" y="190" width="165" height="35"/>
+            <text class="node-title" x="937" y="212" text-anchor="middle">📺 Event Info</text>
+
+            <!-- Block Transition -->
+            <rect class="node-rect node-caption" x="855" y="230" width="165" height="35"/>
+            <text class="node-title" x="937" y="252" text-anchor="middle">📺 Block Transition</text>
+
+            <!-- Broadcast Schedule -->
+            <rect class="node-rect node-caption" x="855" y="270" width="165" height="35"/>
+            <text class="node-title" x="937" y="292" text-anchor="middle">📺 Broadcast Schedule</text>
+
+            <!-- Commentator -->
+            <rect class="node-rect node-caption" x="855" y="310" width="165" height="35"/>
+            <text class="node-title" x="937" y="332" text-anchor="middle">📺 Commentator</text>
+
+            <!-- Player Profile -->
+            <rect class="node-rect node-caption" x="855" y="350" width="165" height="35"/>
+            <text class="node-title" x="937" y="372" text-anchor="middle">📺 Player Profile</text>
+
+            <!-- Elimination -->
+            <rect class="node-rect node-caption" x="855" y="390" width="80" height="28"/>
+            <text class="node-title" x="895" y="408" text-anchor="middle">📺 Elim</text>
+
+            <!-- Location -->
+            <rect class="node-rect node-caption" x="940" y="390" width="80" height="28"/>
+            <text class="node-title" x="980" y="408" text-anchor="middle">📺 Loc</text>
+
+            <!-- ========== ARROWS: INPUT → DB ========== -->
+            <!-- pokerGFX → player_instances -->
+            <path class="arrow-line arrow-input-db" d="M220,102 C235,102 245,269 260,269" marker-end="url(#arrow-input)"/>
+
+            <!-- WSOP+ → tournaments -->
+            <path class="arrow-line arrow-input-db" d="M220,165 C240,165 250,89 260,89" marker-end="url(#arrow-input)"/>
+
+            <!-- WSOP+ → blind_levels -->
+            <path class="arrow-line arrow-input-db" d="M220,172 C245,172 250,134 260,134" marker-end="url(#arrow-input)"/>
+
+            <!-- WSOP+ → payouts -->
+            <path class="arrow-line arrow-input-db" d="M220,178 C250,178 255,179 260,179" marker-end="url(#arrow-input)"/>
+
+            <!-- WSOP+ → players_master -->
+            <path class="arrow-line arrow-input-db" d="M220,185 C250,185 255,224 260,224" marker-end="url(#arrow-input)"/>
+
+            <!-- WSOP+ → schedules -->
+            <path class="arrow-line arrow-input-db" d="M220,190 C250,190 255,314 260,314" marker-end="url(#arrow-input)"/>
+
+            <!-- Manual → commentators -->
+            <path class="arrow-line arrow-input-db" d="M220,242 C250,242 255,359 260,359" marker-end="url(#arrow-input)"/>
+
+            <!-- Manual → events -->
+            <path class="arrow-line arrow-input-db" d="M220,248 C250,248 255,401 260,401" marker-end="url(#arrow-input)"/>
+
+            <!-- Manual → venues -->
+            <path class="arrow-line arrow-input-db" d="M220,255 C290,255 330,401 345,401" marker-end="url(#arrow-input)"/>
+
+            <!-- ========== ARROWS: DB → API ========== -->
+            <!-- tournaments → 통화변환 -->
+            <path class="arrow-line arrow-db-api" d="M425,89 C445,89 455,87 470,87" marker-end="url(#arrow-db)"/>
+
+            <!-- blind_levels → K/M 단위 -->
+            <path class="arrow-line arrow-db-api" d="M425,134 C450,134 460,129 470,129" marker-end="url(#arrow-db)"/>
+
+            <!-- blind_levels → 블라인드포맷 -->
+            <path class="arrow-line arrow-db-api" d="M425,134 C450,134 460,171 470,171" marker-end="url(#arrow-db)"/>
+
+            <!-- payouts → 통화변환 -->
+            <path class="arrow-line arrow-db-api" d="M425,179 C445,179 455,87 470,87" marker-end="url(#arrow-db)"/>
+
+            <!-- players_master → ISO→Flag -->
+            <path class="arrow-line arrow-db-api" d="M425,224 C450,224 460,213 470,213" marker-end="url(#arrow-db)"/>
+
+            <!-- players_master → 대문자 -->
+            <path class="arrow-line arrow-db-api" d="M425,224 C450,224 460,297 470,297" marker-end="url(#arrow-db)"/>
+
+            <!-- player_instances → BB계산 -->
+            <path class="arrow-line arrow-db-api" d="M425,269 C450,269 460,255 470,255" marker-end="url(#arrow-db)"/>
+
+            <!-- player_instances → 쉼표 (통화) -->
+            <path class="arrow-line arrow-db-api" d="M425,269 C455,269 460,87 470,87" marker-end="url(#arrow-db)"/>
+
+            <!-- schedules → 대문자/날짜 -->
+            <path class="arrow-line arrow-db-api" d="M425,314 C450,314 460,297 470,297" marker-end="url(#arrow-db)"/>
+
+            <!-- commentators → 대문자 -->
+            <path class="arrow-line arrow-db-api" d="M425,359 C450,359 460,297 470,297" marker-end="url(#arrow-db)"/>
+
+            <!-- ========== ARROWS: API → AE ========== -->
+            <!-- 통화변환 → Chips -->
+            <path class="arrow-line arrow-api-ae" d="M620,87 C640,87 655,124 665,124" marker-end="url(#arrow-api)"/>
+
+            <!-- 통화변환 → Rank/prize -->
+            <path class="arrow-line arrow-api-ae" d="M620,87 C640,87 655,238 665,238" marker-end="url(#arrow-api)"/>
+
+            <!-- 통화변환 → Buy-in -->
+            <path class="arrow-line arrow-api-ae" d="M620,87 C640,87 655,314 665,314" marker-end="url(#arrow-api)"/>
+
+            <!-- K/M → blinds -->
+            <path class="arrow-line arrow-api-ae" d="M620,129 C640,129 655,276 665,276" marker-end="url(#arrow-api)"/>
+
+            <!-- 블라인드포맷 → blinds -->
+            <path class="arrow-line arrow-api-ae" d="M620,171 C640,171 655,276 665,276" marker-end="url(#arrow-api)"/>
+
+            <!-- ISO→Flag → Flag -->
+            <path class="arrow-line arrow-api-ae" d="M620,213 C640,213 655,200 665,200" marker-end="url(#arrow-api)"/>
+
+            <!-- BB계산 → BBs -->
+            <path class="arrow-line arrow-api-ae" d="M620,255 C640,255 655,162 665,162" marker-end="url(#arrow-api)"/>
+
+            <!-- 대문자 → Name -->
+            <path class="arrow-line arrow-api-ae" d="M620,297 C640,297 655,86 665,86" marker-end="url(#arrow-api)"/>
+
+            <!-- 대문자 → Date/Time -->
+            <path class="arrow-line arrow-api-ae" d="M620,297 C640,297 655,352 665,352" marker-end="url(#arrow-api)"/>
+
+            <!-- 대문자 → Commentator Name -->
+            <path class="arrow-line arrow-api-ae" d="M620,297 C640,320 655,390 665,390" marker-end="url(#arrow-api)"/>
+
+            <!-- ========== ARROWS: AE → Caption ========== -->
+            <!-- Name → Feature Table LB -->
+            <path class="arrow-line arrow-ae-caption" d="M810,86 L855,87" marker-end="url(#arrow-ae)"/>
+            <!-- Chips → Feature Table LB -->
+            <path class="arrow-line arrow-ae-caption" d="M810,124 L855,87" marker-end="url(#arrow-ae)"/>
+            <!-- BBs → Feature Table LB -->
+            <path class="arrow-line arrow-ae-caption" d="M810,162 L855,87" marker-end="url(#arrow-ae)"/>
+            <!-- Flag → Feature Table LB -->
+            <path class="arrow-line arrow-ae-caption" d="M810,200 L855,87" marker-end="url(#arrow-ae)"/>
+
+            <!-- Chips → Mini Chip Counts -->
+            <path class="arrow-line arrow-ae-caption" d="M810,124 L855,127" marker-end="url(#arrow-ae)"/>
+
+            <!-- Rank/prize → Payouts -->
+            <path class="arrow-line arrow-ae-caption" d="M810,238 L855,167" marker-end="url(#arrow-ae)"/>
+
+            <!-- Buy-in → Event Info -->
+            <path class="arrow-line arrow-ae-caption" d="M810,314 L855,207" marker-end="url(#arrow-ae)"/>
+
+            <!-- level/blinds → Block Transition -->
+            <path class="arrow-line arrow-ae-caption" d="M810,276 L855,247" marker-end="url(#arrow-ae)"/>
+
+            <!-- Date/Time → Broadcast Schedule -->
+            <path class="arrow-line arrow-ae-caption" d="M810,352 L855,287" marker-end="url(#arrow-ae)"/>
+
+            <!-- Commentator Name → Commentator -->
+            <path class="arrow-line arrow-ae-caption" d="M810,390 L855,327" marker-end="url(#arrow-ae)"/>
+
+            <!-- Name → Player Profile -->
+            <path class="arrow-line arrow-ae-caption" d="M810,86 C830,86 845,367 855,367" marker-end="url(#arrow-ae)"/>
+
+            <!-- ========== LEGEND ========== -->
+            <rect x="20" y="450" width="1010" height="130" fill="rgba(255,255,255,0.03)" rx="8"/>
+            <text class="group-header" x="525" y="468" text-anchor="middle" font-size="12">매핑 상세</text>
+
+            <!-- 인풋 소스 매핑 -->
+            <text x="35" y="488" fill="#ffc107" font-size="9" font-weight="bold">Input → DB</text>
+            <text x="35" y="502" fill="#888" font-size="8">pokerGFX → player_instances</text>
+            <text x="35" y="514" fill="#888" font-size="8">WSOP+ → tournaments, blind_levels</text>
+            <text x="35" y="526" fill="#888" font-size="8">Manual → commentators, venues</text>
+
+            <!-- tournaments -->
+            <text x="195" y="488" fill="#667eea" font-size="9" font-weight="bold">tournaments</text>
+            <text x="195" y="502" fill="#888" font-size="8">buy_in → $+쉼표</text>
+            <text x="195" y="514" fill="#888" font-size="8">prize_pool → $+쉼표</text>
+
+            <!-- blind_levels -->
+            <text x="320" y="488" fill="#667eea" font-size="9" font-weight="bold">blind_levels</text>
+            <text x="320" y="502" fill="#888" font-size="8">small/big_blind → K단위</text>
+            <text x="320" y="514" fill="#888" font-size="8">ante → K단위</text>
+
+            <!-- players -->
+            <text x="450" y="488" fill="#667eea" font-size="9" font-weight="bold">players</text>
+            <text x="450" y="502" fill="#888" font-size="8">name → 대문자</text>
+            <text x="450" y="514" fill="#888" font-size="8">nationality → Flag PNG</text>
+
+            <!-- player_instances -->
+            <text x="570" y="488" fill="#667eea" font-size="9" font-weight="bold">player_instances</text>
+            <text x="570" y="502" fill="#888" font-size="8">chips → 쉼표 포맷</text>
+            <text x="570" y="514" fill="#888" font-size="8">chips/bb → BB 계산</text>
+
+            <!-- schedules -->
+            <text x="710" y="488" fill="#667eea" font-size="9" font-weight="bold">schedules</text>
+            <text x="710" y="502" fill="#888" font-size="8">date → "Oct 16"</text>
+            <text x="710" y="514" fill="#888" font-size="8">time → "PM UTC+3"</text>
+
+            <!-- commentators -->
+            <text x="840" y="488" fill="#667eea" font-size="9" font-weight="bold">commentators</text>
+            <text x="840" y="502" fill="#888" font-size="8">name → Name 1~2</text>
+            <text x="840" y="514" fill="#888" font-size="8">handle → @Sub 3~4</text>
+
+            <!-- Color Legend -->
+            <rect x="35" y="548" width="12" height="12" fill="#ffc107" rx="2"/>
+            <text x="52" y="558" fill="#aaa" font-size="9">Input</text>
+            <rect x="110" y="548" width="12" height="12" fill="#667eea" rx="2"/>
+            <text x="127" y="558" fill="#aaa" font-size="9">DB</text>
+            <rect x="170" y="548" width="12" height="12" fill="#f5576c" rx="2"/>
+            <text x="187" y="558" fill="#aaa" font-size="9">API</text>
+            <rect x="235" y="548" width="12" height="12" fill="#00f2fe" rx="2"/>
+            <text x="252" y="558" fill="#aaa" font-size="9">AE</text>
+            <rect x="295" y="548" width="12" height="12" fill="#43e97b" rx="2"/>
+            <text x="312" y="558" fill="#aaa" font-size="9">Caption</text>
+        </svg>
+    </div>
+</body>
+</html>
